@@ -1,6 +1,5 @@
-import { auth, db } from "./firebase-config.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { db } from "./firebase-config.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { generateWhatsAppLink, getStatusBadgeClass } from "./whatsapp.js";
 
 function safeText(id, text) {
@@ -9,26 +8,11 @@ function safeText(id, text) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    let currentUser = null;
     const btn = document.getElementById("track-btn");
-    const warning = document.getElementById("auth-warning");
-
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            currentUser = user;
-            btn.disabled = false;
-            warning.classList.add("hidden");
-        } else {
-            currentUser = null;
-            btn.disabled = true;
-            warning.classList.remove("hidden");
-        }
-    });
-
+    
     document.getElementById("track-form").addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (!currentUser) return;
-
+        
         const ackInput = document.getElementById("track-ack").value.trim();
         const errorDiv = document.getElementById("track-error");
         const resultDiv = document.getElementById("track-result");
@@ -37,20 +21,17 @@ document.addEventListener("DOMContentLoaded", () => {
         errorDiv.classList.add("hidden"); resultDiv.classList.add("hidden");
 
         try {
-            const q = query(
-                collection(db, "applications"), 
-                where("userId", "==", currentUser.uid),
-                where("acknowledgementNumber", "==", ackInput)
-            );
+            // Architecture: We read from a publicTracking collection designed specifically 
+            // for safe public exposure without full PII. 
+            const docRef = doc(db, "publicTracking", ackInput);
+            const snap = await getDoc(docRef);
             
-            const snap = await getDocs(q);
-            
-            if (snap.empty) {
-                errorDiv.textContent = "Application not found. Ensure the number is correct and belongs to your account.";
+            if (!snap.exists()) {
+                errorDiv.textContent = "Application not found. Ensure the Acknowledgement Number is correct.";
                 errorDiv.className = "alert alert-error";
             } else {
-                const data = snap.docs[0].data();
-                safeText("res-ack", data.acknowledgementNumber);
+                const data = snap.data();
+                safeText("res-ack", ackInput);
                 safeText("res-service", data.serviceName);
                 
                 const dateStr = (data.createdAt && typeof data.createdAt.toDate === 'function') 
@@ -65,11 +46,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 payEl.textContent = data.paymentStatus || "Pending";
                 payEl.className = "badge " + getStatusBadgeClass(data.paymentStatus);
 
-                document.getElementById("res-whatsapp").href = generateWhatsAppLink(data);
                 resultDiv.classList.remove("hidden");
             }
         } catch (error) {
-            errorDiv.textContent = "Error searching records: " + error.message;
+            // If the backend has not yet created the publicTracking collection or rules block it
+            if (error.code === 'permission-denied') {
+                errorDiv.textContent = "Tracking system requires backend authorization setup by the administrator. Please check back later.";
+            } else {
+                errorDiv.textContent = "Error searching records: " + error.message;
+            }
             errorDiv.className = "alert alert-error";
         } finally {
             btn.disabled = false; btn.textContent = "Track Status";
