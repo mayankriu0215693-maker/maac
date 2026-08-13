@@ -10,19 +10,23 @@
     <nav class="navbar">
         <div class="container nav-container">
             <a href="index.html" class="logo">Maa Enterprises</a>
+            <div class="nav-links">
+                <a href="track-application.html">Track Specific</a>
+                <a href="index.html">Home</a>
+            </div>
         </div>
     </nav>
-
-    <main class="container section">
+    <main class="container section" style="min-height: 70vh;">
         <h2>My Applications</h2>
-        <p>Track your submitted requests here.</p>
-        <br>
+        <p class="text-muted" style="margin-bottom:24px;">Your submitted requests</p>
+        
+        <div id="apps-error" class="hidden"></div>
         <div id="loading-apps">Loading your data...</div>
+        
         <div id="apps-list" class="grid hidden"></div>
-        <div id="empty-apps" class="card text-center hidden">You have not submitted any applications yet.</div>
+        <div id="empty-apps" class="alert alert-warning hidden">You have not submitted any applications yet.</div>
     </main>
-
+    <footer class="footer"><p>&copy; 2026 Maa Enterprises.</p></footer>
     <script type="module" src="js/applications.js"></script>
-    <script type="module" src="js/app.js"></script>
 </body>
 </html>
