@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ | Maa Enterprises</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Maa Enterprises</a>
+        </div>
+    </nav>
+    <main class="container section" style="min-height: 70vh;">
+        <h2 class="text-center">Frequently Asked Questions</h2>
+        <p class="text-center text-muted">Learn about our application and document process.</p>
+        <br>
+        
+        <div id="faq-error" class="error-box hidden"></div>
+        <div id="loading-state" class="text-center">Loading FAQs...</div>
+        
+        <div id="faq-list" class="grid hidden">
+            <!-- Dynamic FAQs load here -->
+        </div>
+
+        <!-- Static Fallback (if backend denies read) -->
+        <div id="static-faq" class="grid hidden" style="margin-top: 24px;">
+            <div class="card">
+                <h3>How do I submit my documents?</h3>
+                <p class="text-muted">For your security, we do not upload documents on the website. After you submit the form, you will receive an Acknowledgement Number. Send this number along with your documents securely to our official WhatsApp.</p>
+            </div>
+            <div class="card">
+                <h3>How do I pay?</h3>
+                <p class="text-muted">Pay the service fee using UPI and send the payment screenshot along with your documents via WhatsApp.</p>
+            </div>
+        </div>
+    </main>
+    <footer class="footer"><p>&copy; 2026 Maa Enterprises Cyber Cafe.</p></footer>
+    <script type="module" src="js/faq.js"></script>
+</body>
+</html>
