@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Services | Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <h2>MAA ADMIN</h2>
+            <div class="admin-nav">
+                <a href="index.html">Dashboard</a>
+                <a href="applications.html">Applications</a>
+                <a href="services.html" class="active">Services</a>
+                <a href="faqs.html">FAQs</a>
+                <a href="settings.html">Settings</a>
+                <hr style="border:0; border-top:1px solid #374151; margin: 10px 0;">
+                <a href="#" id="admin-logout" style="color:#ef4444;">Logout</a>
+            </div>
+        </aside>
+        
+        <main class="admin-content">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h1>Services</h1>
+                <button id="add-new-btn" class="btn btn-primary">Add Service</button>
+            </div>
+            <br>
+            <div id="backend-alert" class="error-box hidden"></div>
+            <div id="loading-state">Loading services...</div>
+            <div id="service-list" class="grid hidden"></div>
+        </main>
+    </div>
+
+    <!-- Safe UI Handler Modal -->
+    <div id="service-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Configure Service</h3>
+                <button id="close-modal" class="modal-close">&times;</button>
+            </div>
+            <form id="service-form">
+                <p class="error-box">Editing requires Backend Authorization. Test attempt will occur on save.</p>
+                <input type="hidden" id="srv-id">
+                <div class="form-group">
+                    <label class="form-label">Service Name</label>
+                    <input type="text" id="srv-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fee (₹)</label>
+                    <input type="number" id="srv-fee" class="form-control" required>
+                </div>
+                <button type="submit" id="save-btn" class="btn btn-primary" style="width:100%;">Save</button>
+            </form>
+        </div>
+    </div>
+    <script type="module" src="../js/admin/admin-services.js"></script>
+</body>
+</html>
