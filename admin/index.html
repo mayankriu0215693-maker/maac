@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <h2>MAA ADMIN</h2>
+            <div class="admin-nav">
+                <a href="index.html" class="active">Dashboard</a>
+                <a href="applications.html">Applications</a>
+                <a href="services.html">Services</a>
+                <a href="faqs.html">FAQs</a>
+                <a href="settings.html">Settings</a>
+                <hr style="border:0; border-top:1px solid #374151; margin: 10px 0;">
+                <p id="admin-user-email" style="font-size:0.8rem; color:#9ca3af; word-break:break-all;"></p>
+                <a href="#" id="admin-logout" style="color:#ef4444;">Logout</a>
+            </div>
+        </aside>
+        
+        <main class="admin-content">
+            <h1>System Dashboard</h1>
+            <p class="text-muted">Overview of platform status.</p>
+            <br>
+            
+            <div id="backend-alert" class="error-box hidden">
+                <strong>Backend Authorization Required:</strong> Current Firestore Security Rules prevent administrative data access. Please update rules to enable dashboard metrics.
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3 class="text-muted">Total Applications</h3>
+                    <h2 id="stat-total">-</h2>
+                </div>
+                <div class="card">
+                    <h3 class="text-muted">Pending Verification</h3>
+                    <h2 id="stat-pending">-</h2>
+                </div>
+                <div class="card">
+                    <h3 class="text-muted">Active Services</h3>
+                    <h2 id="stat-services">-</h2>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="../js/admin/admin-dashboard.js"></script>
+</body>
+</html>
