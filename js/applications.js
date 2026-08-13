@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             try {
-                // Read own applications based on existing rule
                 const q = query(collection(db, "applications"), where("userId", "==", user.uid));
                 const snap = await getDocs(q);
                 
@@ -31,10 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     card.className = "card";
                     
                     const header = document.createElement("div");
-                    header.style = "display:flex; justify-content:space-between; margin-bottom:8px;";
+                    header.style = "display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;";
                     
                     const ackStrong = document.createElement("strong");
                     ackStrong.textContent = data.acknowledgementNumber || "No Ack#";
+                    ackStrong.style.color = "var(--primary)";
                     
                     const statusSpan = document.createElement("span");
                     statusSpan.textContent = data.status || "Pending";
@@ -44,24 +44,31 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     const srvName = document.createElement("h3");
                     srvName.textContent = data.serviceName || "Application";
+                    srvName.style.marginBottom = "4px";
                     
                     const dateP = document.createElement("p");
                     dateP.className = "text-muted";
+                    dateP.style.fontSize = "0.9rem";
                     const dateStr = (data.createdAt && typeof data.createdAt.toDate === 'function') 
                         ? data.createdAt.toDate().toLocaleDateString() : "N/A";
                     dateP.textContent = "Submitted: " + dateStr;
                     
                     const hr = document.createElement("hr");
-                    hr.style = "margin:12px 0; border:0; border-top:1px solid var(--border);";
+                    hr.style = "margin:16px 0; border:0; border-top:1px solid var(--border);";
                     
                     const payP = document.createElement("p");
+                    payP.style.display = "flex";
+                    payP.style.justifyContent = "space-between";
+                    payP.style.alignItems = "center";
+                    
                     const pStrong = document.createElement("strong");
-                    pStrong.textContent = "Payment: ";
+                    pStrong.textContent = "Payment Status";
+                    
                     const paySpan = document.createElement("span");
                     paySpan.textContent = data.paymentStatus || "Pending";
                     paySpan.className = "badge " + getStatusBadgeClass(data.paymentStatus);
-                    payP.append(pStrong, paySpan);
                     
+                    payP.append(pStrong, paySpan);
                     card.append(header, srvName, dateP, hr, payP);
                     list.appendChild(card);
                 });
