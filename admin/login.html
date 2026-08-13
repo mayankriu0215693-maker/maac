@@ -9,22 +9,25 @@
 <body style="background: #0f172a; color: white;">
     <main class="container section" style="max-width: 400px; margin-top: 10vh;">
         <div class="card" style="background: #1e293b; border: 1px solid #334155;">
-            <h2 class="text-center" style="color: #3b82f6;">ADMIN PORTAL</h2>
-            <p class="text-center text-muted" style="margin-bottom: 20px;">Maa Enterprises Cyber Cafe</p>
+            <h2 class="text-center" style="color: #3b82f6; letter-spacing:1px;">ADMIN PORTAL</h2>
+            <p class="text-center" style="color: #94a3b8; margin-bottom: 32px;">Maa Enterprises Cyber Cafe</p>
+            
             <div id="auth-error" class="hidden"></div>
+            
             <form id="admin-login-form">
                 <div class="form-group">
-                    <label class="form-label" style="color:#e2e8f0;">Admin Email</label>
-                    <input type="email" id="admin-email" class="form-control" required style="background:#334155; color:white; border:none;">
+                    <label class="form-label" style="color:#e2e8f0;">Admin ID</label>
+                    <input type="text" id="admin-id" class="form-control" required style="background:#0f172a; color:white; border:1px solid #475569;" placeholder="Enter ID">
                 </div>
                 <div class="form-group">
                     <label class="form-label" style="color:#e2e8f0;">Password</label>
-                    <input type="password" id="admin-pass" class="form-control" required style="background:#334155; color:white; border:none;">
+                    <input type="password" id="admin-pass" class="form-control" required style="background:#0f172a; color:white; border:1px solid #475569;" placeholder="Enter password">
                 </div>
-                <button type="submit" id="login-btn" class="btn btn-primary" style="width:100%;">Secure Login</button>
+                <button type="submit" id="login-btn" class="btn btn-primary" style="width:100%; margin-top:16px;">Secure Login</button>
             </form>
-            <div style="margin-top: 20px; text-align:center;">
-                <a href="../index.html" style="color: #94a3b8; font-size:0.875rem;">&larr; Back to Public Site</a>
+            
+            <div style="margin-top: 24px; text-align:center;">
+                <a href="../index.html" style="color: #64748b; font-size:0.875rem;">&larr; Return to Public Website</a>
             </div>
         </div>
     </main>
