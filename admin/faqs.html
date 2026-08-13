@@ -16,18 +16,18 @@
                 <a href="services.html">Services</a>
                 <a href="faqs.html" class="active">FAQs</a>
                 <a href="settings.html">Settings</a>
-                <hr style="border:0; border-top:1px solid #334155; margin: 10px 0;">
-                <a href="#" id="admin-logout" style="color:#ef4444;">Logout</a>
+                <hr style="border:0; border-top: 1px solid #334155; margin: 16px 0;">
+                <a href="#" id="admin-logout" style="color:#ef4444;">Secure Logout</a>
             </div>
         </aside>
         <main class="admin-content">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h1>FAQs</h1>
+            <div style="display: flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                <h1>Knowledge Base (FAQ)</h1>
                 <button id="add-new-btn" class="btn btn-primary">Add FAQ</button>
             </div>
-            <br>
+            
             <div id="backend-alert" class="hidden"></div>
-            <div id="loading-state">Loading FAQs...</div>
+            <div id="loading-state">Syncing FAQs...</div>
             <div id="faq-list" class="grid hidden"></div>
         </main>
     </div>
@@ -46,9 +46,9 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Answer</label>
-                    <textarea id="faq-a" class="form-control" rows="3" required></textarea>
+                    <textarea id="faq-a" class="form-control" rows="4" required></textarea>
                 </div>
-                <button type="submit" id="save-btn" class="btn btn-primary" style="width:100%;">Save</button>
+                <button type="submit" id="save-btn" class="btn btn-primary" style="width:100%; margin-top:8px;">Save FAQ</button>
             </form>
         </div>
     </div>
