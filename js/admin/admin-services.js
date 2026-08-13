@@ -23,15 +23,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                 card.className = "card";
                 
                 const title = document.createElement("h3");
-                title.textContent = data.name || "Unnamed";
+                title.textContent = data.name || "Unnamed Service";
                 
                 const feeP = document.createElement("p");
+                feeP.className = "text-muted";
+                feeP.style.margin = "8px 0";
                 feeP.textContent = `Fee: ₹${data.fee || 0}`;
                 
                 const editBtn = document.createElement("button");
                 editBtn.className = "btn btn-outline edit-btn";
-                editBtn.style.marginTop = "10px";
-                editBtn.textContent = "Edit";
+                editBtn.style.marginTop = "12px";
+                editBtn.style.width = "100%";
+                editBtn.textContent = "Edit Requirements";
                 editBtn.dataset.id = docSnap.id;
                 editBtn.dataset.name = data.name || "";
                 editBtn.dataset.fee = data.fee || 0;
@@ -66,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("service-form").addEventListener("submit", async (e) => {
         e.preventDefault();
         const btn = document.getElementById("save-btn");
-        btn.disabled = true; btn.textContent = "Saving...";
+        btn.disabled = true; btn.textContent = "Authorizing Write...";
 
         const id = document.getElementById("srv-id").value;
         try {
@@ -76,17 +79,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 active: true
             }, { merge: true });
             
-            alert("Saved successfully!");
+            alert("Backend Save Successful!");
             modal.classList.add("hidden");
             loadServices();
         } catch (error) {
             if (error.code === 'permission-denied') {
-                alert("Permission Denied: Write access to 'services' blocked by rules.");
+                alert("Permission Denied: Write access to 'services' is strictly blocked by backend rules.");
             } else {
                 alert("Error: " + error.message);
             }
         } finally {
-            btn.disabled = false; btn.textContent = "Save";
+            btn.disabled = false; btn.textContent = "Save Changes";
         }
     });
 });
