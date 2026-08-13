@@ -1,32 +1,37 @@
 import { db } from "../firebase-config.js";
-import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { requireAdminAuth } from "./admin-auth.js";
+
+function safeText(id, text) {
+    const el = document.getElementById(id);
+    if(el) el.textContent = text;
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
     requireAdminAuth();
-    
     const alertBox = document.getElementById("backend-alert");
     
     try {
-        // Attempt to read services (Public read allows this under current rules)
         const sSnap = await getDocs(collection(db, "services"));
-        document.getElementById("stat-services").innerText = sSnap.size;
+        safeText("stat-services", sSnap.size.toString());
+    } catch(e) {
+        safeText("stat-services", "Denied");
+    }
 
-        // Attempt to read applications globally (THIS WILL FAIL UNDER CURRENT RULES)
+    try {
+        // This will throw permission-denied under existing rules
         const appSnap = await getDocs(collection(db, "applications"));
-        document.getElementById("stat-total").innerText = appSnap.size;
+        safeText("stat-total", appSnap.size.toString());
         
         let pending = 0;
         appSnap.forEach(doc => {
             if(doc.data().status === 'Pending') pending++;
         });
-        document.getElementById("stat-pending").innerText = pending;
-
+        safeText("stat-pending", pending.toString());
     } catch (error) {
         if (error.code === 'permission-denied') {
-            alertBox.classList.remove("hidden");
-        } else {
-            console.error("Dashboard error:", error);
+            alertBox.className = "alert alert-error";
+            alertBox.textContent = "Backend Authorization Required: Current Firestore rules prevent admin dashboard reads. Fix rules to view global stats.";
         }
     }
 });
