@@ -25,12 +25,7 @@
                 <li><a href="index.html" class="nav-link-standard">Home</a></li>
                 <li><a href="services.html" class="nav-link-standard active">Services</a></li>
                 <li><a href="track-application.html" class="nav-link-standard">Track Application</a></li>
-                <li id="nav-my-apps" class="hidden"><a href="applications.html" class="nav-link-standard">My Applications</a></li>
                 <li><a href="faq.html" class="nav-link-standard">FAQ</a></li>
-                <li><a href="contact.html" class="nav-link-standard">Contact</a></li>
-                
-                <li id="nav-login"><a href="login.html" class="btn btn-primary" style="padding: 0.4rem 1rem;">Login</a></li>
-                <li id="nav-profile" class="hidden"><a href="profile.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Profile</a></li>
                 <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme"><i class="fa-solid fa-moon"></i></button></li>
             </ul>
         </div>
@@ -40,48 +35,48 @@
     <section class="section" style="padding-top: 3rem;">
         <div class="container">
             
-            <a href="services.html" style="display: inline-block; margin-bottom: 2rem; font-weight: 500; color: var(--primary);">
+            <a href="services.html" style="display: inline-block; margin-bottom: 2rem; font-weight: 600; color: var(--primary);">
                 <i class="fa-solid fa-arrow-left"></i> Back to Services
             </a>
 
             <div class="card" style="max-width: 800px; margin: 0 auto; padding: 3rem;">
                 
-                <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2.5rem;">
                     <div style="width: 70px; height: 70px; background: var(--info-bg); color: var(--primary); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
                         <i id="svc-icon" class="fa-solid fa-file-lines"></i>
                     </div>
                     <div>
-                        <h1 id="svc-name" style="margin-bottom: 0.25rem; font-size: 2rem;">Loading Service...</h1>
-                        <p id="svc-desc" style="margin: 0;">Please wait while we load the details.</p>
+                        <h1 id="svc-name" style="margin-bottom: 0.25rem; font-size: 2.2rem;">Loading Service...</h1>
+                        <p id="svc-desc" style="margin: 0; font-size: 1.05rem;">Please wait while we load the details.</p>
                     </div>
                 </div>
 
-                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;">
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 3rem;">
                     <div style="background: var(--bg-alt); padding: 1.5rem; border-radius: var(--radius-md);">
-                        <span style="display: block; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem;">Service Fee</span>
+                        <span style="display: block; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: 0.05em;">Service Fee</span>
                         <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-main);"><i class="fa-solid fa-indian-rupee-sign text-muted" style="font-size: 1.2rem;"></i> <span id="svc-fee">--</span></div>
                     </div>
                     <div style="background: var(--bg-alt); padding: 1.5rem; border-radius: var(--radius-md);">
-                        <span style="display: block; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem;">Processing Time</span>
+                        <span style="display: block; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: 0.05em;">Processing Time</span>
                         <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);"><i class="fa-solid fa-clock text-muted"></i> <span id="svc-time">--</span></div>
                     </div>
                 </div>
 
-                <h3 style="border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 0.25rem; margin-bottom: 1rem;">Required Documents</h3>
-                <ul id="svc-docs" style="list-style-type: disc; padding-left: 1.5rem; margin-bottom: 2.5rem; color: var(--text-main);">
+                <h3 style="border-bottom: 2px solid var(--primary-light); display: inline-block; padding-bottom: 0.3rem; margin-bottom: 1.25rem;">Required Documents</h3>
+                <ul id="svc-docs" style="list-style-type: disc; padding-left: 1.5rem; margin-bottom: 3rem; color: var(--text-main); font-size: 1.05rem; line-height: 1.8;">
                     <li>Valid Proof of Identity</li>
                     <li>Valid Proof of Address</li>
                     <li>Passport size photograph</li>
                 </ul>
 
-                <h3 style="border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 0.25rem; margin-bottom: 1rem;">Privacy & Document Security</h3>
-                <div class="alert alert-warning" style="margin-bottom: 2.5rem;">
+                <h3 style="border-bottom: 2px solid var(--primary-light); display: inline-block; padding-bottom: 0.3rem; margin-bottom: 1.25rem;">Privacy & Document Security</h3>
+                <div class="alert alert-info" style="margin-bottom: 3rem;">
                     <i class="fa-solid fa-shield-halved"></i>&nbsp; 
                     To ensure security, sensitive documents are NOT uploaded on the public form. You will submit them via our secure Business WhatsApp after receiving your Acknowledgement Number.
                 </div>
 
                 <!-- THE CRITICAL APPLY BUTTON (Login Enforcement) -->
-                <button id="apply-now-btn" class="btn btn-primary" style="width: 100%; padding: 1.2rem; font-size: 1.2rem;">
+                <button id="apply-now-btn" class="btn btn-primary" style="width: 100%; padding: 1.25rem; font-size: 1.2rem;">
                     Apply Now <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
@@ -91,52 +86,60 @@
 
     <!-- FOOTER -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom" style="border: none; padding-top: 1rem;">
-                <p>&copy; 2026 Maa Enterprises. All rights reserved.</p>
-            </div>
+        <div class="container text-center">
+            <p class="text-muted" style="margin: 0;">&copy; 2026 Maa Enterprises. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth-compat.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/app.js"></script>
     
     <script>
-        // STRICT LOGIN ENFORCEMENT LOGIC
+        // STRICT LOGIN ENFORCEMENT & PRESERVED REDIRECT UX
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const serviceId = urlParams.get('id') || 'default';
             
             // Mock fetching data for Phase 1 (Replace with Firestore in Phase 2)
             const mockData = {
-                'aadhaar-address': { name: 'Aadhaar Address Change', fee: '250', time: '2-8 Working Days', icon: 'fa-address-card' },
-                'pan-new': { name: 'New PAN Card', fee: '250', time: '~15 Working Days', icon: 'fa-id-card' }
+                'aadhaar-address': { name: 'Aadhaar Address Change', fee: '250', time: '2-8 Working Days', icon: 'fa-address-card', desc: 'Update your residential address securely.' },
+                'pan-new': { name: 'New PAN Card', fee: '250', time: '~15 Working Days', icon: 'fa-id-card', desc: 'Apply for a new Permanent Account Number.' }
             };
-            const svc = mockData[serviceId] || { name: 'Digital Service', fee: 'Varies', time: 'Standard', icon: 'fa-file-lines' };
+            const svc = mockData[serviceId] || { name: 'Digital Service', fee: 'Varies', time: 'Standard', icon: 'fa-file-lines', desc: 'Complete your application online securely.' };
             
             document.getElementById('svc-name').textContent = svc.name;
+            document.getElementById('svc-desc').textContent = svc.desc;
             document.getElementById('svc-fee').textContent = svc.fee;
             document.getElementById('svc-time').textContent = svc.time;
             document.getElementById('svc-icon').className = `fa-solid ${svc.icon}`;
 
             // Handle Apply Click
-            document.getElementById('apply-now-btn').addEventListener('click', () => {
+            const applyBtn = document.getElementById('apply-now-btn');
+            
+            applyBtn.addEventListener('click', () => {
+                applyBtn.disabled = true;
+                applyBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Checking account...';
+
+                // We encode the final destination so the login page knows exactly where to send the user back to
+                const targetApplicationUrl = `apply.html?id=${serviceId}`;
+                const loginRedirectUrl = `login.html?redirect=${encodeURIComponent(targetApplicationUrl)}`;
+
                 if (typeof firebase !== 'undefined' && firebase.auth) {
                     firebase.auth().onAuthStateChanged((user) => {
                         if (user) {
-                            // User is logged in, proceed to application portal
-                            window.location.href = `apply.html?id=${serviceId}`;
+                            // User is logged in -> Go straight to application
+                            window.location.href = targetApplicationUrl;
                         } else {
-                            // NOT LOGGED IN. Enforce UX rule: Redirect to login, passing redirect target.
-                            window.location.href = `login.html?redirect=apply.html?id=${serviceId}`;
+                            // NOT LOGGED IN -> Redirect to Google Login Page with memory of the target
+                            window.location.href = loginRedirectUrl;
                         }
                     });
                 } else {
-                    // Fallback if Firebase fails to load in this env, just go to apply
-                    window.location.href = `apply.html?id=${serviceId}`;
+                    // Dev fallback if Firebase is inactive
+                    setTimeout(() => { window.location.href = loginRedirectUrl; }, 500);
                 }
             });
         });
