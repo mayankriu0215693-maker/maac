@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services | Maa Enterprises</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Maa Enterprises</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="track-application.html">Track</a>
+                <a href="applications.html" class="auth-link hidden">My Applications</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container section">
+        <h2>Available Services</h2>
+        <p>Select a service to view requirements and apply.</p>
+        <br>
+        <div id="loading-state">Loading services...</div>
+        <div id="services-grid" class="grid hidden"></div>
+        <div id="empty-state" class="hidden card text-center">No services are currently available. Please check back later.</div>
+    </main>
+
+    <script type="module" src="js/services.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
