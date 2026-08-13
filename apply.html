@@ -15,7 +15,7 @@
     </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body style="display: none;"> <!-- Hidden until auth resolves to prevent layout flash -->
 
     <!-- NAVBAR -->
     <nav class="navbar">
@@ -25,7 +25,6 @@
                 <li><a href="index.html" class="nav-link-standard">Home</a></li>
                 <li><a href="services.html" class="nav-link-standard">Services</a></li>
                 <li><a href="track-application.html" class="nav-link-standard">Track Application</a></li>
-                <li id="nav-my-apps" class="hidden"><a href="applications.html" class="nav-link-standard">My Applications</a></li>
                 <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme"><i class="fa-solid fa-moon"></i></button></li>
             </ul>
         </div>
@@ -34,17 +33,14 @@
     <!-- CONTENT -->
     <section class="section" style="padding-top: 3rem;">
         <div class="container">
-            
             <div class="card" style="max-width: 800px; margin: 0 auto; padding: 0; overflow: hidden;">
                 
-                <!-- Header -->
                 <div style="background: var(--bg-alt); padding: 2rem; border-bottom: 1px solid var(--border-color);">
                     <h1 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Secure Application Portal</h1>
                     <p style="margin: 0;">Applying for: <strong id="apply-svc-name" style="color: var(--primary);">Loading...</strong></p>
                 </div>
 
-                <!-- Form Area -->
-                <div style="padding: 2rem;">
+                <div style="padding: 2.5rem 2rem;">
                     <div id="form-error" class="alert alert-error hidden">
                         <i class="fa-solid fa-circle-exclamation"></i>&nbsp; <span id="error-msg"></span>
                     </div>
@@ -62,7 +58,6 @@
                             <div class="form-group mb-0">
                                 <label class="form-label">WhatsApp Mobile Number <span style="color: var(--danger);">*</span></label>
                                 <input type="tel" id="app-phone" class="form-control" required placeholder="10-digit number" pattern="[0-9]{10}">
-                                <small class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem; display: block;">Used for document request & updates.</small>
                             </div>
                             <div class="form-group mb-0">
                                 <label class="form-label">Email Address (Optional)</label>
@@ -76,26 +71,27 @@
                         </div>
 
                         <h3 class="mb-3 mt-4" style="color: var(--primary);">Step 2: Review & Submit</h3>
-                        <div style="background: var(--bg-alt); padding: 1.5rem; border-radius: var(--radius-md); border: 1px dashed var(--border-color); margin-bottom: 2rem;">
-                            <p style="font-size: 0.9rem; margin-bottom: 0;"><strong>Notice:</strong> Please verify your details before submitting. Once submitted, you will receive an Acknowledgement Number. You must share this number along with your required documents to our secure WhatsApp line to begin processing.</p>
+                        <div class="alert alert-info" style="margin-bottom: 2.5rem;">
+                            <i class="fa-solid fa-circle-info"></i>&nbsp; 
+                            Once submitted, you will receive an Acknowledgement Number. You must share this number along with your required documents to our secure WhatsApp line to begin processing.
                         </div>
 
-                        <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; padding: 1.2rem; font-size: 1.1rem;">
+                        <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; padding: 1.25rem; font-size: 1.15rem;">
                             Confirm & Submit Application
                         </button>
                     </form>
                 </div>
 
-                <!-- SUCCESS STATE (Hidden initially) -->
+                <!-- SUCCESS STATE -->
                 <div id="success-state" class="hidden" style="padding: 4rem 2rem; text-align: center; background: var(--bg-surface);">
                     <div style="width: 80px; height: 80px; background: var(--success-bg); color: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem;">
                         <i class="fa-solid fa-check"></i>
                     </div>
-                    <h2 style="color: var(--success); margin-bottom: 0.5rem;">Application Submitted Successfully</h2>
+                    <h2 style="color: var(--success); margin-bottom: 0.5rem;">Application Submitted</h2>
                     <p style="margin-bottom: 2rem;">Please save your Acknowledgement Number. You will need it to track your status.</p>
                     
                     <div style="background: var(--bg-alt); padding: 1.5rem; border: 2px dashed var(--border-color); border-radius: var(--radius-md); display: inline-block; margin-bottom: 2.5rem;">
-                        <span class="text-muted" style="font-size: 0.85rem; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 0.5rem;">Acknowledgement Number</span>
+                        <span class="text-muted" style="font-size: 0.85rem; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 0.5rem; letter-spacing: 0.05em;">Acknowledgement Number</span>
                         <h3 id="ack-number-display" style="font-family: monospace; font-size: 1.75rem; color: var(--primary); margin: 0; letter-spacing: 2px;">ME-2026-XXXXXX</h3>
                     </div>
 
@@ -112,31 +108,52 @@
         </div>
     </section>
 
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
     <script src="js/app.js"></script>
+
     <script>
-        // Setup details
+        // AUTH GUARD: Prevent direct access to apply.html without login
         document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const svcId = params.get('id') || 'Unknown Service';
-            document.getElementById('apply-svc-name').textContent = svcId.replace('-', ' ').toUpperCase();
+            const currentUrl = encodeURIComponent(window.location.search ? 'apply.html' + window.location.search : 'apply.html');
+            
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                firebase.auth().onAuthStateChanged((user) => {
+                    if (!user) {
+                        // User bypassed the service details page, kick them back to login securely
+                        window.location.replace(`login.html?redirect=${currentUrl}`);
+                    } else {
+                        // Authorized. Show body.
+                        document.body.style.display = 'flex';
+                        
+                        // Setup Service details based on URL Param
+                        const params = new URLSearchParams(window.location.search);
+                        const svcId = params.get('id') || 'General Request';
+                        document.getElementById('apply-svc-name').textContent = svcId.replace('-', ' ').toUpperCase();
+                    }
+                });
+            } else {
+                // Dev fallback
+                document.body.style.display = 'flex';
+                const params = new URLSearchParams(window.location.search);
+                document.getElementById('apply-svc-name').textContent = (params.get('id') || 'General').toUpperCase();
+            }
         });
 
-        // Handle Submission Frontend UX
+        // Form Submit Demo
         function submitApplication() {
             const form = document.getElementById('application-form');
             const successState = document.getElementById('success-state');
             const submitBtn = document.getElementById('submit-btn');
 
-            // Prevent double click
             submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Processing...';
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
 
-            // Simulate backend save delay for Phase 1 frontend demonstration
             setTimeout(() => {
                 form.parentElement.classList.add('hidden');
                 successState.classList.remove('hidden');
-                
-                // Generate fake ACK number for demo
                 const fakeAck = 'ME-2026-' + Math.floor(100000 + Math.random() * 900000);
                 document.getElementById('ack-number-display').textContent = fakeAck;
                 window.scrollTo(0, 0);
