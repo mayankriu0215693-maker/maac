@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Our Services - MAA ENTERPRISES</title>
-    
+    <title>All Services - MAA ENTERPRISES</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -18,36 +22,101 @@
         <div class="container nav-container">
             <a href="index.html" class="logo">MAA ENTERPRISES</a>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="services.html" class="active">Services</a></li>
-                <li><a href="track-application.html">Track Application</a></li>
-                <li><a href="faq.html">FAQ</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li id="nav-login"><a href="login.html" class="btn btn-primary" style="color:white;">Login</a></li>
-                <li id="nav-profile" class="hidden"><a href="profile.html">Profile</a></li>
+                <li><a href="index.html" class="nav-link-standard">Home</a></li>
+                <li><a href="services.html" class="nav-link-standard active">Services</a></li>
+                <li><a href="track-application.html" class="nav-link-standard">Track Application</a></li>
+                <li id="nav-my-apps" class="hidden"><a href="applications.html" class="nav-link-standard">My Applications</a></li>
+                <li><a href="faq.html" class="nav-link-standard">FAQ</a></li>
+                <li><a href="contact.html" class="nav-link-standard">Contact</a></li>
+                
+                <li id="nav-login"><a href="login.html" class="btn btn-primary" style="padding: 0.4rem 1rem;">Login</a></li>
+                <li id="nav-profile" class="hidden"><a href="profile.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Profile</a></li>
+                <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme"><i class="fa-solid fa-moon"></i></button></li>
             </ul>
         </div>
     </nav>
 
-    <!-- PAGE HERO -->
-    <header class="hero" style="padding: 4rem 0 3rem;">
-        <div class="container hero-content">
-            <h1>Our Digital Services</h1>
-            <p>Choose the service you need and submit your request online securely.</p>
+    <!-- HEADER -->
+    <header class="section" style="padding: 4rem 0 2rem; background: var(--bg-alt); border-bottom: 1px solid var(--border-color);">
+        <div class="container text-center">
+            <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Our Services</h1>
+            <p>Choose the service you need and review the complete details.</p>
         </div>
     </header>
 
-    <!-- ALL SERVICES GRID -->
+    <!-- FULL SERVICE GRID (NO DIRECT APPLY) -->
     <section class="section">
         <div class="container">
-            <div id="services-grid" class="services-grid">
-                <!-- Skeletons shown while loading -->
-                <div class="service-card skeleton skeleton-card"></div>
-                <div class="service-card skeleton skeleton-card"></div>
-                <div class="service-card skeleton skeleton-card"></div>
-                <div class="service-card skeleton skeleton-card"></div>
-                <div class="service-card skeleton skeleton-card"></div>
-                <div class="service-card skeleton skeleton-card"></div>
+            <div class="grid grid-3" id="all-services-container">
+                
+                <!-- Hardcoded for Phase 1 stability. Backend dynamic load handled in Phase 2 if needed -->
+                
+                <div class="card service-card">
+                    <div class="service-card-icon"><i class="fa-solid fa-address-card"></i></div>
+                    <h3 class="service-card-title">Aadhaar Address Change</h3>
+                    <p class="service-card-description">Update your residential address on your Aadhaar card securely online.</p>
+                    <div class="service-card-meta">
+                        <span><i class="fa-solid fa-indian-rupee-sign"></i> ₹250</span>
+                        <span><i class="fa-solid fa-clock"></i> 2–8 Working Days</span>
+                    </div>
+                    <a href="service-details.html?id=aadhaar-address" class="btn btn-outline w-100">View Details</a>
+                </div>
+
+                <div class="card service-card">
+                    <div class="service-card-icon"><i class="fa-solid fa-id-card"></i></div>
+                    <h3 class="service-card-title">New PAN Card</h3>
+                    <p class="service-card-description">Apply for a new Permanent Account Number (PAN) card.</p>
+                    <div class="service-card-meta">
+                        <span><i class="fa-solid fa-indian-rupee-sign"></i> ₹250</span>
+                        <span><i class="fa-solid fa-clock"></i> ~15 Working Days</span>
+                    </div>
+                    <a href="service-details.html?id=pan-new" class="btn btn-outline w-100">View Details</a>
+                </div>
+
+                <div class="card service-card">
+                    <div class="service-card-icon"><i class="fa-solid fa-pen-to-square"></i></div>
+                    <h3 class="service-card-title">PAN Correction</h3>
+                    <p class="service-card-description">Correct name, DOB, or other details on your existing PAN card.</p>
+                    <div class="service-card-meta">
+                        <span><i class="fa-solid fa-indian-rupee-sign"></i> ₹250</span>
+                        <span><i class="fa-solid fa-clock"></i> 15-20 Working Days</span>
+                    </div>
+                    <a href="service-details.html?id=pan-correction" class="btn btn-outline w-100">View Details</a>
+                </div>
+
+                <div class="card service-card">
+                    <div class="service-card-icon"><i class="fa-solid fa-house-user"></i></div>
+                    <h3 class="service-card-title">Domicile Certificate</h3>
+                    <p class="service-card-description">Official proof of permanent residence in the state.</p>
+                    <div class="service-card-meta">
+                        <span><i class="fa-solid fa-indian-rupee-sign"></i> ₹40</span>
+                        <span><i class="fa-solid fa-clock"></i> 14–16 Working Days</span>
+                    </div>
+                    <a href="service-details.html?id=domicile" class="btn btn-outline w-100">View Details</a>
+                </div>
+
+                <div class="card service-card">
+                    <div class="service-card-icon"><i class="fa-solid fa-users"></i></div>
+                    <h3 class="service-card-title">Caste Certificate</h3>
+                    <p class="service-card-description">Official document certifying your caste category.</p>
+                    <div class="service-card-meta">
+                        <span><i class="fa-solid fa-indian-rupee-sign"></i> ₹40</span>
+                        <span><i class="fa-solid fa-clock"></i> 14–16 Working Days</span>
+                    </div>
+                    <a href="service-details.html?id=caste" class="btn btn-outline w-100">View Details</a>
+                </div>
+
+                <div class="card service-card">
+                    <div class="service-card-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <h3 class="service-card-title">Income Certificate</h3>
+                    <p class="service-card-description">Official proof of annual family income.</p>
+                    <div class="service-card-meta">
+                        <span><i class="fa-solid fa-indian-rupee-sign"></i> ₹40</span>
+                        <span><i class="fa-solid fa-clock"></i> 14–16 Working Days</span>
+                    </div>
+                    <a href="service-details.html?id=income" class="btn btn-outline w-100">View Details</a>
+                </div>
+
             </div>
         </div>
     </section>
@@ -58,46 +127,19 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <h3>MAA ENTERPRISES</h3>
-                    <p>Digital Cyber Cafe & Online Service Center located in Biharsharif, Nalanda, Bihar.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="track-application.html">Track Application</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Contact Us</h4>
-                    <ul>
-                        <li><a href="contact.html">Contact Support</a></li>
-                        <li>Biharsharif, Nalanda, Bihar</li>
-                    </ul>
+                    <p>Digital Cyber Cafe & Online Service Center.<br>Biharsharif, Nalanda, Bihar.</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Maa Enterprises. All rights reserved.</p>
+                <p>&copy; 2026 Maa Enterprises. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Firebase Scripts -->
+    <!-- Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth-compat.js"></script>
-    
-    <!-- App Scripts -->
     <script src="js/firebase-config.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/services.js"></script>
-    <script>
-        // Initialize All Services (No limit)
-        document.addEventListener('DOMContentLoaded', () => {
-            if(typeof window.renderServices === 'function') {
-                window.renderServices('services-grid');
-            }
-        });
-    </script>
 </body>
 </html>
