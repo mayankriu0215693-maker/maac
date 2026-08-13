@@ -16,15 +16,15 @@
                 <a href="services.html">Services</a>
                 <a href="faqs.html">FAQs</a>
                 <a href="settings.html">Settings</a>
-                <hr style="border:0; border-top:1px solid #334155; margin: 10px 0;">
-                <a href="#" id="admin-logout" style="color:#ef4444;">Logout</a>
+                <hr style="border:0; border-top: 1px solid #334155; margin: 16px 0;">
+                <a href="#" id="admin-logout" style="color:#ef4444;">Secure Logout</a>
             </div>
         </aside>
         <main class="admin-content">
-            <h1>Application Management</h1>
-            <br>
+            <h1 style="margin-bottom: 24px;">Application Management</h1>
+            
             <div id="backend-alert" class="hidden"></div>
-            <div id="loading-state">Loading applications...</div>
+            <div id="loading-state">Syncing secure database...</div>
             <div id="app-list" class="grid hidden"></div>
         </main>
     </div>
@@ -32,7 +32,7 @@
     <div id="edit-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Update Status</h3>
+                <h3 style="color:var(--text-main);">Update Status</h3>
                 <button id="close-modal" class="modal-close">&times;</button>
             </div>
             <form id="update-form">
@@ -53,7 +53,7 @@
                         <option value="Verified">Verified</option>
                     </select>
                 </div>
-                <button type="submit" id="save-btn" class="btn btn-primary" style="width:100%;">Save Changes</button>
+                <button type="submit" id="save-btn" class="btn btn-primary" style="width:100%; margin-top:8px;">Commit Changes to Backend</button>
             </form>
         </div>
     </div>
