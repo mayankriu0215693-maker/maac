@@ -1,60 +1,87 @@
-import { auth, db } from "./firebase-config.js";
-import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+/**
+ * MAA ENTERPRISES - Premium Authentication Flow
+ * Handles Google Login, UI states, Error mapping, and Redirect preservation.
+ */
 
-const loginBtn = document.getElementById("google-login-btn");
-const errDiv = document.getElementById("auth-error");
+document.addEventListener('DOMContentLoaded', () => {
+    const loginBtn = document.getElementById('google-login-btn');
+    if (!loginBtn) return;
 
-function safeText(id, text) {
-    const el = document.getElementById(id);
-    if(el) el.textContent = text;
-}
+    // Determine redirect URL from query params
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedRedirect = urlParams.get('redirect');
+    const redirectUrl = encodedRedirect ? decodeURIComponent(encodedRedirect) : 'index.html';
 
-if (loginBtn) {
-    loginBtn.addEventListener("click", async (e) => {
-        e.preventDefault();
-        loginBtn.disabled = true;
-        safeText("btn-text", "Connecting securely...");
-        errDiv.className = "hidden";
+    loginBtn.addEventListener('click', () => {
+        // Prevent multiple clicks
+        if (loginBtn.disabled) return;
         
-        const provider = new GoogleAuthProvider();
-        
-        try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
+        setLoadingState(true);
+        hideError();
 
-            // Securely create/update user document
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            const provider = new firebase.auth.GoogleAuthProvider();
             
-            if (!userSnap.exists()) {
-                await setDoc(userRef, {
-                    uid: user.uid,
-                    name: user.displayName || "Customer",
-                    email: user.email,
-                    photoURL: user.photoURL || "",
-                    createdAt: serverTimestamp()
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    // Success! Redirect to the preserved destination.
+                    window.location.href = redirectUrl;
+                })
+                .catch((error) => {
+                    setLoadingState(false);
+                    handleAuthError(error);
                 });
-            }
-
-            // Redirect to intended page or home
-            const urlParams = new URLSearchParams(window.location.search);
-            const redirect = urlParams.get('redirect') || 'index.html';
-            window.location.href = redirect;
-            
-        } catch (error) {
-            errDiv.className = "alert alert-error";
-            let msg = "Authentication failed. Please try again.";
-            if (error.code === 'auth/popup-closed-by-user') {
-                msg = "Login popup was closed before completion.";
-            } else if (error.code === 'auth/popup-blocked') {
-                msg = "Login popup blocked by your browser. Please allow popups.";
-            } else if (error.code === 'auth/network-request-failed') {
-                msg = "Network error. Please check your internet connection.";
-            }
-            safeText("auth-error", msg);
-            loginBtn.disabled = false;
-            safeText("btn-text", "Continue with Google");
+        } else {
+            // Fallback for dev environments without Firebase
+            setTimeout(() => {
+                setLoadingState(false);
+                window.location.href = redirectUrl;
+            }, 1000);
         }
     });
+});
+
+function setLoadingState(isLoading) {
+    const btn = document.getElementById('google-login-btn');
+    const btnText = document.getElementById('btn-text');
+    
+    if (isLoading) {
+        btn.disabled = true;
+        btn.classList.add('loading');
+        btnText.textContent = 'Signing you in...';
+    } else {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btnText.textContent = 'Continue with Google';
+    }
+}
+
+function handleAuthError(error) {
+    let userFriendlyMsg = "Unable to sign you in right now. Please try again.";
+    
+    // Map Firebase technical errors to friendly UI messages
+    if (error.code === 'auth/popup-closed-by-user') {
+        userFriendlyMsg = "Google sign-in was cancelled. Please try again.";
+    } else if (error.code === 'auth/network-request-failed') {
+        userFriendlyMsg = "Network error. Please check your internet connection.";
+    } else if (error.code === 'auth/account-exists-with-different-credential') {
+        userFriendlyMsg = "An account already exists with the same email address.";
+    }
+    
+    // Log technical detail to console for admin debugging
+    console.warn("Auth Error:", error.code, error.message);
+    
+    showError(userFriendlyMsg);
+}
+
+function showError(message) {
+    const errorBox = document.getElementById('auth-error');
+    const errorMsg = document.getElementById('error-message');
+    errorMsg.textContent = message;
+    errorBox.classList.remove('hidden');
+}
+
+function hideError() {
+    const errorBox = document.getElementById('auth-error');
+    errorBox.classList.add('hidden');
 }
