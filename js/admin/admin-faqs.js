@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 
                 const q = document.createElement("h3");
                 q.textContent = data.question || "N/A";
+                q.style.marginBottom = "8px";
                 
                 const a = document.createElement("p");
                 a.textContent = data.answer || "N/A";
@@ -30,8 +31,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 
                 const btn = document.createElement("button");
                 btn.className = "btn btn-outline edit-btn";
-                btn.style.marginTop = "10px";
-                btn.textContent = "Edit";
+                btn.style.marginTop = "16px";
+                btn.style.width = "100%";
+                btn.textContent = "Edit FAQ";
                 btn.dataset.id = docSnap.id;
                 btn.dataset.q = data.question || "";
                 btn.dataset.a = data.answer || "";
@@ -75,17 +77,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 answer: document.getElementById("faq-a").value
             }, { merge: true });
             
-            alert("Saved successfully!");
+            alert("Backend Save Successful!");
             modal.classList.add("hidden");
             loadFaqs();
         } catch (error) {
             if (error.code === 'permission-denied') {
-                alert("Permission Denied: Write access to 'faqs' blocked by rules.");
+                alert("Permission Denied: Write access to 'faqs' is strictly blocked by backend rules.");
             } else {
                 alert("Error: " + error.message);
             }
         } finally {
-            btn.disabled = false; btn.textContent = "Save";
+            btn.disabled = false; btn.textContent = "Save FAQ";
         }
     });
 });
