@@ -16,18 +16,18 @@
                 <a href="services.html" class="active">Services</a>
                 <a href="faqs.html">FAQs</a>
                 <a href="settings.html">Settings</a>
-                <hr style="border:0; border-top:1px solid #334155; margin: 10px 0;">
-                <a href="#" id="admin-logout" style="color:#ef4444;">Logout</a>
+                <hr style="border:0; border-top: 1px solid #334155; margin: 16px 0;">
+                <a href="#" id="admin-logout" style="color:#ef4444;">Secure Logout</a>
             </div>
         </aside>
         <main class="admin-content">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h1>Services</h1>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+                <h1>Service Catalog</h1>
                 <button id="add-new-btn" class="btn btn-primary">Add Service</button>
             </div>
-            <br>
+            
             <div id="backend-alert" class="hidden"></div>
-            <div id="loading-state">Loading services...</div>
+            <div id="loading-state">Syncing catalog...</div>
             <div id="service-list" class="grid hidden"></div>
         </main>
     </div>
@@ -48,7 +48,7 @@
                     <label class="form-label">Fee (₹)</label>
                     <input type="number" id="srv-fee" class="form-control" required>
                 </div>
-                <button type="submit" id="save-btn" class="btn btn-primary" style="width:100%;">Save</button>
+                <button type="submit" id="save-btn" class="btn btn-primary" style="width:100%; margin-top:8px;">Save Service</button>
             </form>
         </div>
     </div>
