@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications | Maa Enterprises</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Maa Enterprises</a>
+        </div>
+    </nav>
+
+    <main class="container section">
+        <h2>My Applications</h2>
+        <p>Track your submitted requests here.</p>
+        <br>
+        <div id="loading-apps">Loading your data...</div>
+        <div id="apps-list" class="grid hidden"></div>
+        <div id="empty-apps" class="card text-center hidden">You have not submitted any applications yet.</div>
+    </main>
+
+    <script type="module" src="js/applications.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
