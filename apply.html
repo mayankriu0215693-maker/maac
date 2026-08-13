@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apply | Maa Enterprises</title>
+    <title>Apply Securely | Maa Enterprises</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -14,44 +14,46 @@
     </nav>
     <main class="container section" style="max-width: 600px; min-height: 70vh;">
         <div id="auth-warning" class="card hidden text-center">
-            <h3>Login Required</h3>
-            <p class="text-muted" style="margin:16px 0;">You must be logged in to submit an application securely.</p>
-            <a href="login.html" class="btn btn-primary">Login Now</a>
+            <h3 style="margin-bottom: 8px;">Authentication Required</h3>
+            <p class="text-muted" style="margin-bottom: 24px;">You must securely authenticate with Google to submit official applications and protect your data.</p>
+            <a href="login.html" id="login-redirect-btn" class="btn btn-primary" style="width:100%;">Proceed to Secure Login</a>
         </div>
 
         <div id="application-container" class="hidden">
-            <h2>Apply: <span id="form-service-name" class="text-muted">Loading...</span></h2>
-            <br>
+            <h2 style="margin-bottom: 24px;">Apply: <span id="form-service-name" style="color:var(--primary);">Loading...</span></h2>
             
-            <div id="success-block" class="card hidden" style="border-left: 4px solid var(--success);">
-                <h3 style="color: var(--success);">Application Submitted!</h3>
-                <p style="margin-top:8px;">Your Acknowledgement Number is:</p>
-                <h2 id="display-ack" style="letter-spacing: 1px; margin: 10px 0;"></h2>
-                <p><strong>Next Step:</strong> Send your required documents & payment screenshot via WhatsApp.</p>
-                <br>
-                <a id="whatsapp-btn" href="#" target="_blank" class="btn btn-success" style="width:100%; margin-bottom:10px;">Send Docs via WhatsApp</a>
-                <a href="applications.html" class="btn btn-outline" style="width:100%;">Track Application</a>
+            <div id="success-block" class="card hidden" style="border-left: 4px solid var(--success); text-align:center;">
+                <h3 style="color: var(--success); margin-bottom:12px;">Application Registered!</h3>
+                <p class="text-muted">Your Official Acknowledgement Number:</p>
+                <h2 id="display-ack" style="letter-spacing: 1.5px; margin: 16px 0; color:var(--text-main);"></h2>
+                
+                <div class="alert alert-warning" style="text-align:left; margin-bottom:24px;">
+                    <strong>Mandatory Next Step:</strong> For your privacy, do NOT upload IDs here. Tap the WhatsApp button below to send your required documents and payment screenshot directly to the owner.
+                </div>
+                
+                <a id="whatsapp-btn" href="#" target="_blank" class="btn btn-success" style="width:100%; margin-bottom:16px;">Send Documents via WhatsApp</a>
+                <a href="applications.html" class="btn btn-outline" style="width:100%;">View My Applications</a>
             </div>
 
             <form id="apply-form" class="card">
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
-                    <input type="text" id="app-name" class="form-control" required>
+                    <input type="text" id="app-name" class="form-control" required placeholder="Name as per documents">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Mobile Number</label>
-                    <input type="tel" id="app-mobile" class="form-control" pattern="[0-9]{10}" title="10 digit number" required>
+                    <input type="tel" id="app-mobile" class="form-control" pattern="[0-9]{10}" title="Valid 10 digit mobile number" required placeholder="10-digit number">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Address / Details</label>
-                    <textarea id="app-details" class="form-control" rows="3" required placeholder="Enter exact requirements..."></textarea>
+                    <label class="form-label">Address & Application Details</label>
+                    <textarea id="app-details" class="form-control" rows="4" required placeholder="Enter exact requirements..."></textarea>
                 </div>
                 <div id="form-error" class="hidden"></div>
-                <button type="submit" id="submit-btn" class="btn btn-primary" style="width:100%;">Submit Application</button>
+                <button type="submit" id="submit-btn" class="btn btn-primary" style="width:100%;">Submit & Generate Ack Number</button>
             </form>
         </div>
     </main>
-    <footer class="footer"><p>&copy; 2026 Maa Enterprises.</p></footer>
+    <footer class="footer"><div class="container footer-bottom"><p>&copy; 2026 Maa Enterprises.</p></div></footer>
     <script type="module" src="js/apply.js"></script>
 </body>
 </html>
