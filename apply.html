@@ -2,58 +2,159 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apply Securely | Maa Enterprises</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apply Securely - MAA ENTERPRISES</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo">Maa Enterprises</a>
+            <a href="index.html" class="logo">MAA ENTERPRISES</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="track-application.html">Track Application</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="nav-login"><a href="login.html" class="btn btn-primary" style="color:white;">Login</a></li>
+                <li id="nav-profile" class="hidden"><a href="profile.html">Profile</a></li>
+            </ul>
         </div>
     </nav>
-    <main class="container section" style="max-width: 600px; min-height: 70vh;">
-        <div id="auth-warning" class="card hidden text-center">
-            <h3 style="margin-bottom: 8px;">Authentication Required</h3>
-            <p class="text-muted" style="margin-bottom: 24px;">You must securely authenticate with Google to submit official applications and protect your data.</p>
-            <a href="login.html" id="login-redirect-btn" class="btn btn-primary" style="width:100%;">Proceed to Secure Login</a>
-        </div>
 
-        <div id="application-container" class="hidden">
-            <h2 style="margin-bottom: 24px;">Apply: <span id="form-service-name" style="color:var(--primary);">Loading...</span></h2>
-            
-            <div id="success-block" class="card hidden" style="border-left: 4px solid var(--success); text-align:center;">
-                <h3 style="color: var(--success); margin-bottom:12px;">Application Registered!</h3>
-                <p class="text-muted">Your Official Acknowledgement Number:</p>
-                <h2 id="display-ack" style="letter-spacing: 1.5px; margin: 16px 0; color:var(--text-main);"></h2>
+    <!-- PAGE HERO -->
+    <header class="hero" style="padding: 3rem 0 2rem; background: var(--bg-main); border-bottom: none;">
+        <div class="container hero-content">
+            <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Application Portal</h1>
+            <p>Please fill out the details carefully. Your data is processed securely.</p>
+        </div>
+    </header>
+
+    <!-- APPLICATION FORM SECTION -->
+    <section class="section" style="padding-top: 0; min-height: 60vh;">
+        <div class="container">
+            <div class="card" style="max-width: 800px; margin: 0 auto; padding: 0;">
                 
-                <div class="alert alert-warning" style="text-align:left; margin-bottom:24px;">
-                    <strong>Mandatory Next Step:</strong> For your privacy, do NOT upload IDs here. Tap the WhatsApp button below to send your required documents and payment screenshot directly to the owner.
+                <!-- Service Summary Header -->
+                <div style="background: var(--bg-alt); padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color); border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
+                    <span class="text-muted" style="font-size: 0.85rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Selected Service</span>
+                    <h2 id="selected-service-name" style="margin: 0.25rem 0; font-size: 1.5rem; color: var(--primary-dark);">Loading Service...</h2>
+                    <div style="display: flex; gap: 1.5rem; margin-top: 0.5rem; font-size: 0.9rem;">
+                        <span id="selected-service-fee" style="font-weight: 500;"><i class="fa-solid fa-indian-rupee-sign text-muted"></i> ₹---</span>
+                        <span id="selected-service-time" style="font-weight: 500;"><i class="fa-solid fa-clock text-muted"></i> ---</span>
+                    </div>
                 </div>
-                
-                <a id="whatsapp-btn" href="#" target="_blank" class="btn btn-success" style="width:100%; margin-bottom:16px;">Send Documents via WhatsApp</a>
-                <a href="applications.html" class="btn btn-outline" style="width:100%;">View My Applications</a>
+
+                <!-- Form Area -->
+                <div style="padding: 2rem;">
+                    
+                    <div id="form-error" class="alert alert-error hidden">
+                        <i class="fa-solid fa-circle-exclamation"></i>&nbsp; <span id="error-message">Please fill all required fields correctly.</span>
+                    </div>
+
+                    <form id="application-form" onsubmit="event.preventDefault();">
+                        
+                        <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem; border-bottom: 2px solid var(--primary-light); display: inline-block; padding-bottom: 0.25rem;">1. Applicant Details</h3>
+                        
+                        <div class="form-group">
+                            <label for="applicant-name" class="form-label">Full Name (As per official records) <span style="color: var(--danger);">*</span></label>
+                            <input type="text" id="applicant-name" class="form-control" required placeholder="Enter your full legal name">
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                            <div class="form-group">
+                                <label for="applicant-phone" class="form-label">WhatsApp Number <span style="color: var(--danger);">*</span></label>
+                                <input type="tel" id="applicant-phone" class="form-control" required placeholder="10-digit mobile number" pattern="[0-9]{10}">
+                            </div>
+                            <div class="form-group">
+                                <label for="applicant-email" class="form-label">Email Address (Optional)</label>
+                                <input type="email" id="applicant-email" class="form-control" placeholder="For status updates">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="applicant-address" class="form-label">Current Address <span style="color: var(--danger);">*</span></label>
+                            <textarea id="applicant-address" class="form-control" required placeholder="Enter complete address with PIN code" style="min-height: 80px;"></textarea>
+                        </div>
+
+                        <h3 style="margin: 2rem 0 1.5rem; font-size: 1.1rem; border-bottom: 2px solid var(--primary-light); display: inline-block; padding-bottom: 0.25rem;">2. Additional Details & Documents</h3>
+                        
+                        <div class="alert alert-warning" style="background: var(--warning-bg); border-left-color: var(--warning); color: var(--text-main); font-size: 0.9rem;">
+                            <i class="fa-solid fa-shield-halved" style="color: var(--warning);"></i>&nbsp; 
+                            <strong>Document Security Notice:</strong> To ensure your privacy and data security, required documents (like Aadhaar, Photos) will be collected via our secure Business WhatsApp channel AFTER you submit this form and receive your Acknowledgement Number.
+                        </div>
+
+                        <div class="form-group">
+                            <label for="special-notes" class="form-label">Any specific instructions or notes? (Optional)</label>
+                            <textarea id="special-notes" class="form-control" placeholder="E.g., Only need e-PAN, urgent processing request, etc." style="min-height: 80px;"></textarea>
+                        </div>
+
+                        <!-- Submit Section -->
+                        <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+                            <p class="text-muted" style="font-size: 0.85rem; text-align: center;">By submitting this application, you agree to our processing terms and confirm that all provided information is accurate.</p>
+                            
+                            <button type="submit" id="submit-application-btn" class="btn btn-primary" style="width: 100%; max-width: 400px; padding: 1rem; font-size: 1.1rem;">
+                                Submit Application & Generate ID <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- SUCCESS STATE (Hidden by default, shown after form submission) -->
+                <div id="success-state" class="hidden" style="padding: 4rem 2rem; text-align: center; background: #fff; border-radius: var(--radius-lg);">
+                    <div style="width: 80px; height: 80px; background: var(--success-bg); color: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem;">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h2 style="color: var(--success); margin-bottom: 0.5rem;">Application Submitted!</h2>
+                    <p style="margin-bottom: 2rem;">Your application has been recorded successfully. Please save your Acknowledgement Number for future reference.</p>
+                    
+                    <div style="background: var(--bg-alt); padding: 1.5rem; border: 2px dashed var(--border-color); border-radius: var(--radius-md); display: inline-block; margin-bottom: 2.5rem;">
+                        <span class="text-muted" style="font-size: 0.85rem; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 0.5rem;">Acknowledgement Number</span>
+                        <h3 id="generated-ack-number" style="font-family: monospace; font-size: 1.75rem; color: var(--primary-dark); margin: 0; letter-spacing: 2px;">MAA-XXXXXXXXXX</h3>
+                    </div>
+
+                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Next Step: Document Verification</h3>
+                    <p class="text-muted" style="margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto;">Please click the button below to send your Acknowledgement Number and required documents to our secure WhatsApp channel to begin processing.</p>
+                    
+                    <a href="#" id="whatsapp-proceed-btn" class="btn btn-success" style="padding: 1rem 2rem; font-size: 1.05rem;">
+                        <i class="fa-brands fa-whatsapp" style="font-size: 1.25rem;"></i> Proceed to WhatsApp
+                    </a>
+                </div>
+
             </div>
-
-            <form id="apply-form" class="card">
-                <div class="form-group">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" id="app-name" class="form-control" required placeholder="Name as per documents">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Mobile Number</label>
-                    <input type="tel" id="app-mobile" class="form-control" pattern="[0-9]{10}" title="Valid 10 digit mobile number" required placeholder="10-digit number">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Address & Application Details</label>
-                    <textarea id="app-details" class="form-control" rows="4" required placeholder="Enter exact requirements..."></textarea>
-                </div>
-                <div id="form-error" class="hidden"></div>
-                <button type="submit" id="submit-btn" class="btn btn-primary" style="width:100%;">Submit & Generate Ack Number</button>
-            </form>
         </div>
-    </main>
-    <footer class="footer"><div class="container footer-bottom"><p>&copy; 2026 Maa Enterprises.</p></div></footer>
-    <script type="module" src="js/apply.js"></script>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>MAA ENTERPRISES</h3>
+                    <p>Digital Cyber Cafe & Online Service Center located in Biharsharif, Nalanda, Bihar.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Maa Enterprises. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/apply.js"></script>
 </body>
 </html>
