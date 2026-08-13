@@ -29,39 +29,43 @@ document.addEventListener("DOMContentLoaded", async () => {
             list.classList.remove("hidden");
             snap.forEach(docSnap => {
                 const data = docSnap.data();
-                
                 const card = document.createElement("div");
                 card.className = "card";
                 
                 const header = document.createElement("div");
-                header.style = "display:flex; justify-content:space-between; margin-bottom:8px;";
+                header.style = "display:flex; justify-content:space-between; margin-bottom:12px;";
+                
                 const ackS = document.createElement("strong");
                 ackS.textContent = data.acknowledgementNumber || "N/A";
+                
                 const sBadge = document.createElement("span");
                 sBadge.textContent = data.status || "Pending";
                 sBadge.className = "badge " + getStatusBadgeClass(data.status);
                 header.append(ackS, sBadge);
                 
-                const sName = document.createElement("p");
-                sName.className = "text-muted";
+                const sName = document.createElement("h4");
+                sName.style.marginBottom = "8px";
                 sName.textContent = data.serviceName || "Service";
                 
                 const cName = document.createElement("p");
+                cName.style.fontSize = "0.9rem";
                 cName.innerHTML = `<strong>Customer:</strong> `;
                 const cSpan = document.createElement("span");
                 cSpan.textContent = data.customerName || "N/A";
                 cName.appendChild(cSpan);
                 
                 const mob = document.createElement("p");
+                mob.style.fontSize = "0.9rem";
                 mob.innerHTML = `<strong>Phone:</strong> `;
                 const mSpan = document.createElement("span");
                 mSpan.textContent = data.mobile || "N/A";
                 mob.appendChild(mSpan);
                 
                 const hr = document.createElement("hr");
-                hr.style = "margin:10px 0; border:0; border-top:1px solid var(--border);";
+                hr.style = "margin:16px 0; border:0; border-top:1px solid var(--border);";
                 
                 const pName = document.createElement("p");
+                pName.style.fontSize = "0.9rem";
                 pName.innerHTML = `<strong>Payment:</strong> `;
                 const pBadge = document.createElement("span");
                 pBadge.textContent = data.paymentStatus || "Pending";
@@ -70,8 +74,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 
                 const mngBtn = document.createElement("button");
                 mngBtn.className = "btn btn-outline edit-btn";
-                mngBtn.style.marginTop = "12px";
-                mngBtn.textContent = "Manage";
+                mngBtn.style.marginTop = "16px";
+                mngBtn.style.width = "100%";
+                mngBtn.textContent = "Manage Application";
                 mngBtn.dataset.id = docSnap.id;
                 mngBtn.dataset.status = data.status || "Pending";
                 mngBtn.dataset.pay = data.paymentStatus || "Pending";
@@ -93,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             loading.classList.add("hidden");
             alertBox.className = "alert alert-error";
             if (error.code === 'permission-denied') {
-                alertBox.textContent = "Backend Authorization Required: Current rules block reading all applications. Please update Firestore security rules.";
+                alertBox.textContent = "Security Notice: Current Firestore Rules block administrative reading of applications. Please update backend security rules for the Admin UID.";
             } else {
                 alertBox.textContent = error.message;
             }
@@ -113,7 +118,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const newStatus = document.getElementById("edit-status").value;
         const newPay = document.getElementById("edit-payment").value;
 
-        btn.disabled = true; btn.textContent = "Saving...";
+        btn.disabled = true; btn.textContent = "Saving Securely...";
         
         try {
             await updateDoc(doc(db, "applications", id), {
@@ -122,11 +127,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 updatedAt: new Date()
             });
             modal.classList.add("hidden");
-            alert("Updated successfully.");
+            alert("Backend Update Successful.");
             loadApps();
         } catch (error) {
             if (error.code === 'permission-denied') {
-                alert("Permission Denied: You do not have write access under current rules.");
+                alert("Permission Denied: You do not have write access under current backend rules.");
             } else {
                 alert("Error: " + error.message);
             }
