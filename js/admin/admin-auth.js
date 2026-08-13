@@ -3,40 +3,40 @@ import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https:/
 
 const loginForm = document.getElementById("admin-login-form");
 
+function safeText(id, text) {
+    const el = document.getElementById(id);
+    if(el) el.textContent = text;
+}
+
 if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const btn = document.getElementById("login-btn");
         const err = document.getElementById("auth-error");
         
-        btn.disabled = true; btn.innerText = "Authenticating..."; 
-        err.innerText = ""; err.classList.remove("error-box");
+        btn.disabled = true; btn.textContent = "Authenticating..."; 
+        err.className = "hidden";
         
         try {
             const email = document.getElementById("admin-email").value.trim();
             const pass = document.getElementById("admin-pass").value;
 
             await signInWithEmailAndPassword(auth, email, pass);
-            // On success, redirect to dashboard. 
-            // Note: Actual admin authorization reads will fail gracefully on the dashboard if rules aren't updated.
             window.location.href = "index.html";
         } catch (error) {
-            err.classList.add("error-box");
-            err.innerText = "Login failed: " + error.message.replace("Firebase: ", "");
-            btn.disabled = false; btn.innerText = "Secure Login";
+            err.className = "alert alert-error";
+            safeText("auth-error", "Login failed: " + error.message.replace("Firebase: ", ""));
+            btn.disabled = false; btn.textContent = "Secure Login";
         }
     });
 }
 
-// Global Admin Session Guard (for other admin pages)
 export function requireAdminAuth() {
     onAuthStateChanged(auth, (user) => {
         if (!user) {
             window.location.href = "login.html";
         } else {
-            // Optional: update UI with admin email
-            const emailDisplay = document.getElementById("admin-user-email");
-            if(emailDisplay) emailDisplay.textContent = user.email;
+            safeText("admin-user-email", user.email);
         }
     });
 
