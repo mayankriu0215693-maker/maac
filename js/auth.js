@@ -1,79 +1,60 @@
 import { auth, db } from "./firebase-config.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-const signupForm = document.getElementById("signup-form");
-const loginForm = document.getElementById("login-form");
-
-function getErrorMessage(code) {
-    switch (code) {
-        case 'auth/email-already-in-use': return "This email is already registered. Please login.";
-        case 'auth/invalid-credential': return "Invalid email or password.";
-        case 'auth/user-not-found': return "No account found with this email.";
-        case 'auth/wrong-password': return "Incorrect password.";
-        case 'auth/weak-password': return "Password must be at least 6 characters.";
-        case 'auth/network-request-failed': return "Network error. Please check your connection.";
-        default: return "Authentication failed. Please try again.";
-    }
-}
+const loginBtn = document.getElementById("google-login-btn");
+const errDiv = document.getElementById("auth-error");
 
 function safeText(id, text) {
     const el = document.getElementById(id);
     if(el) el.textContent = text;
 }
 
-if (signupForm) {
-    signupForm.addEventListener("submit", async (e) => {
+if (loginBtn) {
+    loginBtn.addEventListener("click", async (e) => {
         e.preventDefault();
-        const btn = document.getElementById("reg-btn");
-        const errDiv = document.getElementById("auth-error");
-        
-        btn.disabled = true; btn.textContent = "Creating Account..."; 
+        loginBtn.disabled = true;
+        safeText("btn-text", "Connecting securely...");
         errDiv.className = "hidden";
         
-        try {
-            const email = document.getElementById("reg-email").value.trim();
-            const pass = document.getElementById("reg-pass").value;
-            const name = document.getElementById("reg-name").value.trim();
-
-            const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-            const user = userCredential.user;
-
-            await setDoc(doc(db, "users", user.uid), {
-                uid: user.uid,
-                name: name,
-                email: email,
-                createdAt: serverTimestamp()
-            });
-
-            window.location.href = "index.html";
-        } catch (error) {
-            errDiv.className = "alert alert-error";
-            safeText("auth-error", getErrorMessage(error.code));
-            btn.disabled = false; btn.textContent = "Sign Up";
-        }
-    });
-}
-
-if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById("login-btn");
-        const errDiv = document.getElementById("auth-error");
-        
-        btn.disabled = true; btn.textContent = "Logging in..."; 
-        errDiv.className = "hidden";
+        const provider = new GoogleAuthProvider();
         
         try {
-            const email = document.getElementById("login-email").value.trim();
-            const pass = document.getElementById("login-pass").value;
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
 
-            await signInWithEmailAndPassword(auth, email, pass);
-            window.location.href = "index.html";
+            // Securely create/update user document
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+            
+            if (!userSnap.exists()) {
+                await setDoc(userRef, {
+                    uid: user.uid,
+                    name: user.displayName || "Customer",
+                    email: user.email,
+                    photoURL: user.photoURL || "",
+                    createdAt: serverTimestamp()
+                });
+            }
+
+            // Redirect to intended page or home
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirect = urlParams.get('redirect') || 'index.html';
+            window.location.href = redirect;
+            
         } catch (error) {
             errDiv.className = "alert alert-error";
-            safeText("auth-error", getErrorMessage(error.code));
-            btn.disabled = false; btn.textContent = "Login";
+            let msg = "Authentication failed. Please try again.";
+            if (error.code === 'auth/popup-closed-by-user') {
+                msg = "Login popup was closed before completion.";
+            } else if (error.code === 'auth/popup-blocked') {
+                msg = "Login popup blocked by your browser. Please allow popups.";
+            } else if (error.code === 'auth/network-request-failed') {
+                msg = "Network error. Please check your internet connection.";
+            }
+            safeText("auth-error", msg);
+            loginBtn.disabled = false;
+            safeText("btn-text", "Continue with Google");
         }
     });
 }
