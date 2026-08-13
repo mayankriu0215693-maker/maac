@@ -1,19 +1,17 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Preserving existing config exactly as requested
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDt9NaK6Qcj7toLyJ2pFtsPSK_G9_2BK5A",
-  authDomain: "maa-enterprises-cyber.firebaseapp.com",
-  projectId: "maa-enterprises-cyber",
-  storageBucket: "maa-enterprises-cyber.firebasestorage.app",
-  messagingSenderId: "1083359884535",
-  appId: "1:1083359884535:web:f3d22b6fe69d4df3cb4ff2"
+  apiKey: "AIzaSyCp_FNrSJld5R34WKbxXaWVghQdRLPoBKk",
+  authDomain: "maa-enterprises-ea055.firebaseapp.com",
+  projectId: "maa-enterprises-ea055",
+  storageBucket: "maa-enterprises-ea055.firebasestorage.app",
+  messagingSenderId: "861855732921",
+  appId: "1:861855732921:web:9cfcc89d32258786b87768"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-export { auth, db };
