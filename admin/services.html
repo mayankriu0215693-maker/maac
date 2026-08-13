@@ -16,24 +16,22 @@
                 <a href="services.html" class="active">Services</a>
                 <a href="faqs.html">FAQs</a>
                 <a href="settings.html">Settings</a>
-                <hr style="border:0; border-top:1px solid #374151; margin: 10px 0;">
+                <hr style="border:0; border-top:1px solid #334155; margin: 10px 0;">
                 <a href="#" id="admin-logout" style="color:#ef4444;">Logout</a>
             </div>
         </aside>
-        
         <main class="admin-content">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h1>Services</h1>
                 <button id="add-new-btn" class="btn btn-primary">Add Service</button>
             </div>
             <br>
-            <div id="backend-alert" class="error-box hidden"></div>
+            <div id="backend-alert" class="hidden"></div>
             <div id="loading-state">Loading services...</div>
             <div id="service-list" class="grid hidden"></div>
         </main>
     </div>
 
-    <!-- Safe UI Handler Modal -->
     <div id="service-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
@@ -41,7 +39,6 @@
                 <button id="close-modal" class="modal-close">&times;</button>
             </div>
             <form id="service-form">
-                <p class="error-box">Editing requires Backend Authorization. Test attempt will occur on save.</p>
                 <input type="hidden" id="srv-id">
                 <div class="form-group">
                     <label class="form-label">Service Name</label>
