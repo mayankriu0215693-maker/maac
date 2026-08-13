@@ -1,5 +1,6 @@
 import { db } from "./firebase-config.js";
-import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { collection, getDocs, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { escapeHTML } from "./whatsapp.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const grid = document.getElementById("services-grid");
@@ -12,7 +13,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         loading.classList.add("hidden");
 
-        // Filter active client-side in case index for where("active", "==", true) is missing
         let hasActive = false;
 
         snap.forEach((docSnap) => {
@@ -20,35 +20,45 @@ document.addEventListener("DOMContentLoaded", async () => {
             if(data.active === false) return;
             hasActive = true;
             
-            const feeText = data.fee ? `₹${data.fee}` : "Contact for fee";
-            const timeText = data.processingTime || "Standard";
+            const feeText = data.fee ? `₹${escapeHTML(data.fee.toString())}` : "Contact for fee";
+            const timeText = escapeHTML(data.processingTime || "Standard Processing");
+            const nameText = escapeHTML(data.name || "Service");
+            const descText = escapeHTML(data.shortDescription || data.description || "");
             
             const card = document.createElement("div");
             card.className = "card";
             
             const title = document.createElement("h3");
-            title.textContent = data.name || "Service";
+            title.textContent = nameText;
+            title.style.marginBottom = "12px";
             
             const desc = document.createElement("p");
             desc.className = "text-muted";
-            desc.textContent = data.shortDescription || data.description || "";
+            desc.textContent = descText;
+            desc.style.marginBottom = "16px";
             
-            const br1 = document.createElement("br");
+            const infoDiv = document.createElement("div");
+            infoDiv.style.marginBottom = "24px";
+            infoDiv.style.background = "#f1f5f9";
+            infoDiv.style.padding = "12px";
+            infoDiv.style.borderRadius = "8px";
             
-            const feeP = document.createElement("p");
-            feeP.innerHTML = `<strong>Fee:</strong> ${feeText}`;
+            const feeP = document.createElement("div");
+            feeP.innerHTML = `<strong>Service Fee:</strong> ${feeText}`;
+            feeP.style.marginBottom = "8px";
             
-            const timeP = document.createElement("p");
-            timeP.innerHTML = `<strong>Time:</strong> ${timeText}`;
+            const timeP = document.createElement("div");
+            timeP.innerHTML = `<strong>Estimated Time:</strong> ${timeText}`;
             
-            const br2 = document.createElement("br");
+            infoDiv.append(feeP, timeP);
             
             const link = document.createElement("a");
             link.className = "btn btn-outline";
-            link.href = `apply.html?id=${docSnap.id}`;
-            link.textContent = "Apply Now";
+            link.style.width = "100%";
+            link.href = `apply.html?id=${encodeURIComponent(docSnap.id)}`;
+            link.textContent = "Apply Securely";
             
-            card.append(title, desc, br1, feeP, timeP, br2, link);
+            card.append(title, desc, infoDiv, link);
             grid.appendChild(card);
         });
 
@@ -59,7 +69,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
     } catch (error) {
-        loading.innerHTML = `<div class="alert alert-error">Error loading services: ${error.message}</div>`;
-        console.error(error);
+        loading.innerHTML = `<div class="alert alert-error">Error loading services: ${escapeHTML(error.message)}</div>`;
     }
 });
