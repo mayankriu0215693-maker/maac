@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function loadServices() {
         try {
-            // Read is allowed under current rules (allow read: if true)
             const snap = await getDocs(collection(db, "services"));
             document.getElementById("loading-state").classList.add("hidden");
             list.classList.remove("hidden");
@@ -19,13 +18,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             snap.forEach(docSnap => {
                 const data = docSnap.data();
+                
                 const card = document.createElement("div");
                 card.className = "card";
-                card.innerHTML = `
-                    <h3>${data.name}</h3>
-                    <p>Fee: ₹${data.fee || 0}</p>
-                    <button class="btn btn-outline edit-btn" style="margin-top:10px;" data-id="${docSnap.id}" data-name="${data.name}" data-fee="${data.fee}">Edit</button>
-                `;
+                
+                const title = document.createElement("h3");
+                title.textContent = data.name || "Unnamed";
+                
+                const feeP = document.createElement("p");
+                feeP.textContent = `Fee: ₹${data.fee || 0}`;
+                
+                const editBtn = document.createElement("button");
+                editBtn.className = "btn btn-outline edit-btn";
+                editBtn.style.marginTop = "10px";
+                editBtn.textContent = "Edit";
+                editBtn.dataset.id = docSnap.id;
+                editBtn.dataset.name = data.name || "";
+                editBtn.dataset.fee = data.fee || 0;
+                
+                card.append(title, feeP, editBtn);
                 list.appendChild(card);
             });
 
@@ -38,9 +49,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 });
             });
         } catch (error) {
-            console.error(error);
-            alertBox.innerText = "Error loading services.";
-            alertBox.classList.remove("hidden");
+            alertBox.textContent = "Error loading services: " + error.message;
+            alertBox.className = "alert alert-error";
         }
     }
 
@@ -56,28 +66,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("service-form").addEventListener("submit", async (e) => {
         e.preventDefault();
         const btn = document.getElementById("save-btn");
-        btn.disabled = true; btn.innerText = "Testing Write...";
+        btn.disabled = true; btn.textContent = "Saving...";
 
         const id = document.getElementById("srv-id").value;
         try {
-            // WILL FAIL because services rules are: allow write: if false
             await setDoc(doc(db, "services", id), {
                 name: document.getElementById("srv-name").value,
                 fee: parseInt(document.getElementById("srv-fee").value),
                 active: true
             }, { merge: true });
             
-            alert("Success!");
+            alert("Saved successfully!");
             modal.classList.add("hidden");
             loadServices();
         } catch (error) {
             if (error.code === 'permission-denied') {
-                alert("Permission Denied: Write access to 'services' is blocked by current Firestore rules. Backend configuration required.");
+                alert("Permission Denied: Write access to 'services' blocked by rules.");
             } else {
                 alert("Error: " + error.message);
             }
         } finally {
-            btn.disabled = false; btn.innerText = "Save";
+            btn.disabled = false; btn.textContent = "Save";
         }
     });
 });
