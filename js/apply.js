@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } else {
             document.getElementById("auth-warning").classList.remove("hidden");
+            document.getElementById("login-redirect-btn").href = `login.html?redirect=apply.html?id=${serviceId || ''}`;
         }
     });
 
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const errorDiv = document.getElementById("form-error");
         
         if (!currentUser) return;
-        btn.disabled = true; btn.textContent = "Submitting..."; errorDiv.className = "hidden";
+        btn.disabled = true; btn.textContent = "Submitting Securely..."; errorDiv.className = "hidden";
 
         try {
             const timeChunk = Date.now().toString().slice(-6);
@@ -79,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("success-block").classList.remove("hidden");
             safeText("display-ack", ackNo);
             document.getElementById("whatsapp-btn").href = generateWhatsAppLink(appData);
+            window.scrollTo(0, 0);
 
         } catch (error) {
             errorDiv.textContent = "Submission failed: " + error.message;
