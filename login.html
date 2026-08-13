@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Maa Enterprises</title>
+    <title>Customer Login | Maa Enterprises</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,26 +12,24 @@
             <a href="index.html" class="logo">Maa Enterprises</a>
         </div>
     </nav>
-    <main class="container section" style="max-width: 400px; min-height: 70vh; display:flex; align-items:center;">
-        <div class="card" style="width:100%;">
-            <h2 class="text-center">Customer Login</h2>
-            <p class="text-center text-muted" style="margin-bottom: 20px;">Access your applications</p>
+    <main class="container section" style="max-width: 450px; min-height: 70vh; display:flex; align-items:center;">
+        <div class="card" style="width:100%; text-align:center;">
+            <h2 style="margin-bottom: 8px;">Customer Login</h2>
+            <p class="text-muted" style="margin-bottom: 32px;">Continue securely to manage your applications</p>
+            
             <div id="auth-error" class="hidden"></div>
-            <form id="login-form">
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" id="login-email" class="form-control" required placeholder="name@example.com">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" id="login-pass" class="form-control" required placeholder="Enter password">
-                </div>
-                <button type="submit" id="login-btn" class="btn btn-primary" style="width:100%;">Login</button>
-            </form>
-            <p class="text-center" style="margin-top:16px;">Don't have an account? <a href="signup.html">Sign up</a></p>
+            
+            <button id="google-login-btn" class="btn btn-google">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                <span id="btn-text">Continue with Google</span>
+            </button>
+
+            <p class="text-muted" style="margin-top:24px; font-size: 0.85rem;">
+                By continuing, you agree to Maa Enterprises' secure data processing. We do not store sensitive identification documents on this website.
+            </p>
         </div>
     </main>
-    <footer class="footer"><p>&copy; 2026 Maa Enterprises.</p></footer>
+    <footer class="footer"><div class="container footer-bottom"><p>&copy; 2026 Maa Enterprises.</p></div></footer>
     <script type="module" src="js/auth.js"></script>
 </body>
 </html>
