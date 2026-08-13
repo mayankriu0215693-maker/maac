@@ -3,51 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Tracking | Maa Enterprises</title>
+    <title>Track Application | Maa Enterprises</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="container nav-container">
             <a href="index.html" class="logo">Maa Enterprises</a>
+            <div class="nav-links">
+                <a href="applications.html">My Applications</a>
+                <a href="index.html">Home</a>
+            </div>
         </div>
     </nav>
     <main class="container section" style="max-width: 600px; min-height: 70vh;">
         <div class="card">
             <h2>Secure Application Tracking</h2>
-            <p class="text-muted">Enter your Acknowledgement Number. (You must be logged in to track your applications for security purposes).</p>
-            <br>
+            <p class="text-muted" style="margin-bottom:16px;">You must be logged in to track your applications for privacy.</p>
             
-            <div id="auth-warning" class="error-box hidden">
-                You must <a href="login.html" style="font-weight:bold; text-decoration:underline;">login</a> to track your applications securely.
+            <div id="auth-warning" class="alert alert-warning hidden">
+                You must <a href="login.html" style="font-weight:bold; text-decoration:underline;">login</a> to search records.
             </div>
 
             <form id="track-form">
                 <div class="form-group">
                     <label class="form-label">Acknowledgement Number</label>
-                    <input type="text" id="track-ack" class="form-control" placeholder="e.g. ME-2026-12345678" required>
+                    <input type="text" id="track-ack" class="form-control" placeholder="e.g. ME-2026-123456" required>
                 </div>
                 <button type="submit" id="track-btn" class="btn btn-primary" disabled>Track Status</button>
             </form>
 
-            <div id="track-error" class="error-msg hidden" style="margin-top: 16px;"></div>
+            <div id="track-error" class="hidden" style="margin-top: 16px;"></div>
 
-            <div id="track-result" class="hidden" style="margin-top: 24px; padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius);">
+            <div id="track-result" class="hidden" style="margin-top: 24px; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius);">
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                     <strong id="res-ack"></strong>
                     <span id="res-status" class="badge"></span>
                 </div>
                 <h3 id="res-service"></h3>
                 <p class="text-muted" id="res-date"></p>
-                <hr style="margin:12px 0; border:0; border-top:1px solid #e5e7eb;">
-                <p><strong>Payment Status:</strong> <span id="res-payment" class="badge"></span></p>
-                <div style="margin-top: 16px;">
-                    <a id="res-whatsapp" href="#" target="_blank" class="btn btn-success" style="width:100%;">Send Documents/Payment via WhatsApp</a>
-                </div>
+                <hr style="margin:12px 0; border:0; border-top:1px solid var(--border);">
+                <p style="margin-bottom: 16px;"><strong>Payment Status:</strong> <span id="res-payment" class="badge"></span></p>
+                <a id="res-whatsapp" href="#" target="_blank" class="btn btn-success" style="width:100%;">Send Docs via WhatsApp</a>
             </div>
         </div>
     </main>
-    <footer class="footer"><p>&copy; 2026 Maa Enterprises Cyber Cafe.</p></footer>
+    <footer class="footer"><p>&copy; 2026 Maa Enterprises.</p></footer>
     <script type="module" src="js/tracking.js"></script>
 </body>
 </html>
