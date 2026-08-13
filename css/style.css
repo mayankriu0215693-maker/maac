@@ -28,7 +28,7 @@ ul { list-style: none; }
 .navbar { background-color: var(--card-bg); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; padding: 16px 0; }
 .nav-container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
 .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary-color); }
-.nav-links { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.nav-links { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; font-size: 0.9rem;}
 .nav-links a { color: var(--text-main); font-weight: 500; }
 .nav-links a:hover { color: var(--primary-color); }
 
@@ -37,24 +37,49 @@ ul { list-style: none; }
 .grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
 @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); } }
 
-.btn { display: inline-block; padding: 10px 20px; border-radius: var(--radius); font-weight: bold; cursor: pointer; border: none; text-align: center; transition: background 0.3s; }
+.btn { display: inline-block; padding: 10px 20px; border-radius: var(--radius); font-weight: bold; cursor: pointer; border: none; text-align: center; transition: background 0.3s; font-size: 0.95rem; }
 .btn-primary { background: var(--primary-color); color: white; }
 .btn-primary:hover { background: var(--primary-hover); }
 .btn-success { background: var(--success-color); color: white; }
+.btn-danger { background: var(--danger-color); color: white; }
 .btn-outline { background: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); }
+.btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
 /* Forms */
 .form-group { margin-bottom: 16px; }
 .form-label { display: block; margin-bottom: 6px; font-weight: 500; }
 .form-control { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: var(--radius); font-size: 1rem; }
 .form-control:focus { outline: none; border-color: var(--primary-color); }
-.error-msg { color: var(--danger-color); font-size: 0.875rem; margin-top: 4px; }
+.error-msg { color: var(--danger-color); font-size: 0.875rem; margin-top: 4px; padding: 8px; border-radius: 4px; }
+.error-box { background: #fef2f2; border-left: 4px solid var(--danger-color); color: var(--danger-color); padding: 12px; margin-bottom: 16px; border-radius: 4px; font-size: 0.9rem;}
 
 /* Status Badges */
 .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
 .badge-pending { background: #fef3c7; color: #b45309; }
-.badge-success { background: #d1fae5; color: #047857; }
+.badge-processing { background: #e0e7ff; color: #3730a3; }
+.badge-success, .badge-completed { background: #d1fae5; color: #047857; }
+.badge-rejected { background: #fee2e2; color: #991b1b; }
+
+/* Admin Layout */
+.admin-layout { display: flex; min-height: 100vh; }
+.admin-sidebar { width: 250px; background: #111827; color: white; padding: 20px; flex-shrink: 0;}
+.admin-sidebar h2 { color: #60a5fa; margin-bottom: 24px; font-size: 1.2rem;}
+.admin-nav { display: flex; flex-direction: column; gap: 10px; }
+.admin-nav a { color: #9ca3af; padding: 10px; border-radius: 6px; transition: 0.2s; }
+.admin-nav a:hover, .admin-nav a.active { background: #1f2937; color: white; }
+.admin-content { flex-grow: 1; padding: 30px; background: var(--bg-color); overflow-y: auto;}
+
+/* Modals */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: white; padding: 24px; border-radius: var(--radius); width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
 
 /* Footer */
 .footer { background: var(--card-bg); padding: 24px 0; margin-top: auto; text-align: center; border-top: 1px solid var(--border-color); }
 
+@media (max-width: 768px) {
+  .admin-layout { flex-direction: column; }
+  .admin-sidebar { width: 100%; padding: 15px; }
+  .admin-content { padding: 15px; }
+}
