@@ -4,7 +4,7 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 document.addEventListener("DOMContentLoaded", () => {
     const authLinks = document.querySelectorAll(".auth-link");
     const guestLinks = document.querySelectorAll(".guest-link");
-    const logoutBtn = document.getElementById("logout-btn");
+    const logoutBtns = document.querySelectorAll(".logout-btn");
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -16,15 +16,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", async (e) => {
+    logoutBtns.forEach(btn => {
+        btn.addEventListener("click", async (e) => {
             e.preventDefault();
             try {
                 await signOut(auth);
                 window.location.href = "login.html";
             } catch (error) {
-                console.error("Logout failed:", error);
+                console.error("Logout error:", error);
             }
         });
-    }
+    });
 });
