@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Settings | Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <h2>MAA ADMIN</h2>
+            <div class="admin-nav">
+                <a href="index.html">Dashboard</a>
+                <a href="applications.html">Applications</a>
+                <a href="services.html">Services</a>
+                <a href="faqs.html">FAQs</a>
+                <a href="settings.html" class="active">Settings</a>
+                <hr style="border:0; border-top:1px solid #334155; margin: 10px 0;">
+                <a href="#" id="admin-logout" style="color:#ef4444;">Logout</a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <h1>Business Settings</h1>
+            <br>
+            <div id="backend-alert" class="hidden"></div>
+            <div class="card" style="max-width: 600px;">
+                <form id="settings-form">
+                    <div class="form-group">
+                        <label class="form-label">Business Name</label>
+                        <input type="text" id="set-name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone / WhatsApp</label>
+                        <input type="text" id="set-phone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <textarea id="set-address" class="form-control" rows="2"></textarea>
+                    </div>
+                    <button type="submit" id="save-btn" class="btn btn-primary">Save Settings</button>
+                </form>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="../js/admin/admin-settings.js"></script>
+</body>
+</html>
