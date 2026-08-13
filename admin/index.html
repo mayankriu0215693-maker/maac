@@ -16,27 +16,28 @@
                 <a href="services.html">Services</a>
                 <a href="faqs.html">FAQs</a>
                 <a href="settings.html">Settings</a>
-                <hr style="border:0; border-top:1px solid #334155; margin: 10px 0;">
-                <p id="admin-user-email" style="font-size:0.8rem; color:#94a3b8; word-break:break-all;"></p>
-                <a href="#" id="admin-logout" style="color:#ef4444;">Logout</a>
+                <hr style="border:0; border-top: 1px solid #334155; margin: 16px 0;">
+                <p id="admin-user-email" style="font-size:0.85rem; color:#94a3b8; word-break:break-all; margin-bottom:8px;"></p>
+                <a href="#" id="admin-logout" style="color:#ef4444;">Secure Logout</a>
             </div>
         </aside>
         <main class="admin-content">
-            <h1>System Dashboard</h1>
-            <br>
+            <h1 style="margin-bottom: 24px;">System Dashboard</h1>
+            
             <div id="backend-alert" class="hidden"></div>
-            <div class="grid">
-                <div class="card">
-                    <h3 class="text-muted">Total Applications</h3>
-                    <h2 id="stat-total">-</h2>
+            
+            <div class="grid grid-3">
+                <div class="card" style="border-left: 4px solid var(--primary);">
+                    <h3 class="text-muted" style="font-size: 1rem; margin-bottom: 8px;">Total Applications</h3>
+                    <h2 id="stat-total" style="font-size: 2.5rem;">-</h2>
                 </div>
-                <div class="card">
-                    <h3 class="text-muted">Pending Action</h3>
-                    <h2 id="stat-pending">-</h2>
+                <div class="card" style="border-left: 4px solid var(--warning);">
+                    <h3 class="text-muted" style="font-size: 1rem; margin-bottom: 8px;">Pending Action</h3>
+                    <h2 id="stat-pending" style="font-size: 2.5rem;">-</h2>
                 </div>
-                <div class="card">
-                    <h3 class="text-muted">Active Services</h3>
-                    <h2 id="stat-services">-</h2>
+                <div class="card" style="border-left: 4px solid var(--success);">
+                    <h3 class="text-muted" style="font-size: 1rem; margin-bottom: 8px;">Active Services</h3>
+                    <h2 id="stat-services" style="font-size: 2.5rem;">-</h2>
                 </div>
             </div>
         </main>
