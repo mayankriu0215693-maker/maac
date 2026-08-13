@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     } catch (error) {
         if(error.code === 'permission-denied') {
-            alertBox.textContent = "Cannot read settings: Permission denied.";
+            alertBox.textContent = "Cannot read secure settings: Permission denied by backend rules.";
         } else {
             alertBox.textContent = "Error: " + error.message;
         }
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        btn.disabled = true; btn.textContent = "Saving...";
+        btn.disabled = true; btn.textContent = "Authorizing...";
         alertBox.className = "hidden";
         
         try {
@@ -38,10 +38,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 address: document.getElementById("set-address").value
             }, { merge: true });
             
-            alert("Settings saved successfully.");
+            alert("Settings updated in Firestore.");
         } catch (error) {
             if (error.code === 'permission-denied') {
-                alertBox.textContent = "Permission Denied: Cannot update settings under current rules.";
+                alertBox.textContent = "Permission Denied: Cannot update global settings under current strict rules.";
                 alertBox.className = "alert alert-error";
             } else {
                 alertBox.textContent = "Error: " + error.message;
