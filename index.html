@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MAA ENTERPRISES - Digital Services Made Simple</title>
-    
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- CSS -->
+    <!-- Inline script to prevent theme flash -->
+    <script>
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -23,115 +23,111 @@
         <div class="container nav-container">
             <a href="index.html" class="logo">MAA ENTERPRISES</a>
             <ul class="nav-links">
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="services.html">Services</a></li>
-                <li><a href="track-application.html">Track Application</a></li>
-                <li><a href="faq.html">FAQ</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <!-- Authenticated state hidden by default, toggled via JS -->
-                <li id="nav-login"><a href="login.html" class="btn btn-primary" style="color:white;">Login</a></li>
-                <li id="nav-profile" class="hidden"><a href="profile.html">Profile</a></li>
+                <li><a href="index.html" class="nav-link-standard active">Home</a></li>
+                <li><a href="services.html" class="nav-link-standard">Services</a></li>
+                <li><a href="track-application.html" class="nav-link-standard">Track Application</a></li>
+                <li id="nav-my-apps" class="hidden"><a href="applications.html" class="nav-link-standard">My Applications</a></li>
+                <li><a href="faq.html" class="nav-link-standard">FAQ</a></li>
+                <li><a href="contact.html" class="nav-link-standard">Contact</a></li>
+                
+                <li id="nav-login"><a href="login.html" class="btn btn-primary" style="padding: 0.4rem 1rem;">Login</a></li>
+                <li id="nav-profile" class="hidden"><a href="profile.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Profile</a></li>
+                
+                <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme"><i class="fa-solid fa-moon"></i></button></li>
             </ul>
         </div>
     </nav>
 
     <!-- HERO SECTION -->
-    <header class="hero">
-        <div class="container hero-content">
-            <h1>Digital Services Made Simple</h1>
-            <p>Apply for essential digital services easily, securely and conveniently with Maa Enterprises. Fast processing, transparent pricing, and real-time tracking.</p>
-            <div class="hero-btns">
+    <header class="section" style="padding: 6rem 0; background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-alt) 100%);">
+        <div class="container text-center" style="max-width: 800px; animation: fadeUp 0.8s ease-out forwards;">
+            <h1 style="color: var(--primary);">Digital Services Made Simple</h1>
+            <p style="font-size: 1.25rem; margin-bottom: 2.5rem;">Apply for essential digital services easily, conveniently and transparently with Maa Enterprises. Secure process, clear pricing, and live tracking.</p>
+            <div class="hero-btns" style="display: flex; gap: 1rem; justify-content: center;">
                 <a href="services.html" class="btn btn-primary">Explore Services <i class="fa-solid fa-arrow-right"></i></a>
                 <a href="track-application.html" class="btn btn-outline">Track Application <i class="fa-solid fa-magnifying-glass"></i></a>
             </div>
         </div>
     </header>
 
-    <!-- SERVICES SECTION -->
-    <section class="section bg-alt">
-        <div class="container">
-            <div class="text-center">
-                <h2>Our Popular Services</h2>
-                <p>Choose from our most requested digital services and apply securely.</p>
-            </div>
-            
-            <!-- JS will populate this grid -->
-            <div id="services-grid" class="services-grid">
-                <!-- Skeletons shown while loading -->
-                <div class="service-card skeleton skeleton-card"></div>
-                <div class="service-card skeleton skeleton-card"></div>
-                <div class="service-card skeleton skeleton-card"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- HOW IT WORKS SECTION -->
+    <!-- POPULAR SERVICES (STRICTLY 3 CARDS, NO DIRECT APPLY) -->
     <section class="section">
         <div class="container">
-            <div class="text-center">
-                <h2>How It Works</h2>
-                <p>A simple, transparent process to get your digital documents sorted.</p>
+            <div class="text-center mb-4">
+                <h2>Popular Services</h2>
+                <p>Explore our most requested digital services.</p>
             </div>
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">1</div>
+            
+            <div class="grid grid-3">
+                
+                <!-- Service 1 -->
+                <div class="card service-card">
+                    <div class="service-card-icon"><i class="fa-solid fa-address-card"></i></div>
+                    <h3 class="service-card-title">Aadhaar Address Change</h3>
+                    <p class="service-card-description">Update your residential address on your Aadhaar card securely online.</p>
+                    <div class="service-card-meta">
+                        <span><i class="fa-solid fa-indian-rupee-sign"></i> ₹250</span>
+                        <span><i class="fa-solid fa-clock"></i> 2–8 Working Days</span>
+                    </div>
+                    <a href="service-details.html?id=aadhaar-address" class="btn btn-outline w-100">View Details</a>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="card service-card">
+                    <div class="service-card-icon"><i class="fa-solid fa-id-card"></i></div>
+                    <h3 class="service-card-title">New PAN Card</h3>
+                    <p class="service-card-description">Apply for a new Permanent Account Number (PAN) card easily.</p>
+                    <div class="service-card-meta">
+                        <span><i class="fa-solid fa-indian-rupee-sign"></i> ₹250</span>
+                        <span><i class="fa-solid fa-clock"></i> ~15 Working Days</span>
+                    </div>
+                    <a href="service-details.html?id=pan-new" class="btn btn-outline w-100">View Details</a>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="card service-card">
+                    <div class="service-card-icon"><i class="fa-solid fa-pen-to-square"></i></div>
+                    <h3 class="service-card-title">PAN Correction</h3>
+                    <p class="service-card-description">Correct name, DOB, or other details on your existing PAN card.</p>
+                    <div class="service-card-meta">
+                        <span><i class="fa-solid fa-indian-rupee-sign"></i> ₹250</span>
+                        <span><i class="fa-solid fa-clock"></i> 15-20 Working Days</span>
+                    </div>
+                    <a href="service-details.html?id=pan-correction" class="btn btn-outline w-100">View Details</a>
+                </div>
+            </div>
+
+            <div class="text-center mt-4" style="padding-top: 3rem;">
+                <a href="services.html" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">View All Services</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" style="background: var(--bg-alt);">
+        <div class="container text-center">
+            <h2 class="mb-4">How It Works</h2>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <div style="padding: 2rem;">
+                    <div style="width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin: 0 auto 1rem;">1</div>
                     <h3>Choose a Service</h3>
-                    <p>Select the document or service you need from our extensive catalog.</p>
+                    <p>Select the service you need and review details.</p>
                 </div>
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h3>Submit Details</h3>
-                    <p>Fill out the secure online application form with your accurate details.</p>
+                <div style="padding: 2rem;">
+                    <div style="width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin: 0 auto 1rem;">2</div>
+                    <h3>Submit Application</h3>
+                    <p>Enter your details in our secure online portal.</p>
                 </div>
-                <div class="step-card">
-                    <div class="step-number">3</div>
+                <div style="padding: 2rem;">
+                    <div style="width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin: 0 auto 1rem;">3</div>
                     <h3>Document Process</h3>
-                    <p>Complete the payment and follow our secure WhatsApp document verification.</p>
+                    <p>Follow the provided WhatsApp document workflow securely.</p>
                 </div>
-                <div class="step-card">
-                    <div class="step-number">4</div>
+                <div style="padding: 2rem;">
+                    <div style="width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin: 0 auto 1rem;">4</div>
                     <h3>Track Status</h3>
-                    <p>Use your acknowledgement number to track real-time progress anytime.</p>
+                    <p>Use your acknowledgement number to track progress.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- WHY CHOOSE US -->
-    <section class="section bg-alt">
-        <div class="container">
-            <div class="text-center">
-                <h2>Why Choose Maa Enterprises</h2>
-                <p>We prioritize your security, time, and convenience.</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fa-solid fa-bolt feature-icon"></i>
-                    <h3>Simple Process</h3>
-                    <p>No complicated forms. Apply online from the comfort of your home.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fa-solid fa-tag feature-icon"></i>
-                    <h3>Transparent Pricing</h3>
-                    <p>All fees are clearly displayed before you start your application.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fa-solid fa-shield-halved feature-icon"></i>
-                    <h3>Privacy-Focused</h3>
-                    <p>Your sensitive data and documents are handled with strict confidentiality.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA SECTION -->
-    <section class="cta-section">
-        <div class="container">
-            <h2>Need a Digital Service?</h2>
-            <p>Choose a service and start your application today.</p>
-            <div class="hero-btns" style="margin-top: 2rem;">
-                <a href="services.html" class="btn btn-primary" style="background: white; color: var(--primary);">Explore Services</a>
-                <a href="track-application.html" class="btn btn-outline">Track Application</a>
             </div>
         </div>
     </section>
@@ -142,7 +138,7 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <h3>MAA ENTERPRISES</h3>
-                    <p>Digital Cyber Cafe & Online Service Center located in Biharsharif, Nalanda, Bihar.</p>
+                    <p>Digital Cyber Cafe & Online Service Center.<br>Biharsharif, Nalanda, Bihar.</p>
                 </div>
                 <div class="footer-links">
                     <h4>Quick Links</h4>
@@ -153,45 +149,17 @@
                         <li><a href="faq.html">FAQ</a></li>
                     </ul>
                 </div>
-                <div class="footer-links">
-                    <h4>Popular Services</h4>
-                    <ul>
-                        <li><a href="service-details.html?id=pan-new">New PAN Card</a></li>
-                        <li><a href="service-details.html?id=aadhaar-update">Aadhaar Address Change</a></li>
-                        <li><a href="service-details.html?id=domicile">Domicile Certificate</a></li>
-                        <li><a href="service-details.html?id=income">Income Certificate</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Contact Us</h4>
-                    <ul>
-                        <li><a href="contact.html">Contact Support</a></li>
-                        <li>Biharsharif, Nalanda, Bihar</li>
-                    </ul>
-                </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Maa Enterprises. All rights reserved.</p>
+                <p>&copy; 2026 Maa Enterprises. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Firebase Scripts (Preserving existing architecture structure) -->
+    <!-- Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth-compat.js"></script>
-    
-    <!-- App Scripts -->
     <script src="js/firebase-config.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/services.js"></script>
-    <script>
-        // Initialize Homepage Services (Limits to 6 for the homepage)
-        document.addEventListener('DOMContentLoaded', () => {
-            if(typeof window.renderServices === 'function') {
-                window.renderServices('services-grid', 6);
-            }
-        });
-    </script>
 </body>
 </html>
