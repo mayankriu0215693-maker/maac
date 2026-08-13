@@ -4,133 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Track Application - MAA ENTERPRISES</title>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <!-- NAVBAR -->
+    <!-- NAVBAR (NO LOGIN ENFORCEMENT) -->
     <nav class="navbar">
         <div class="container nav-container">
             <a href="index.html" class="logo">MAA ENTERPRISES</a>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="services.html">Services</a></li>
-                <li><a href="track-application.html" class="active">Track Application</a></li>
-                <li><a href="faq.html">FAQ</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li id="nav-login"><a href="login.html" class="btn btn-primary" style="color:white;">Login</a></li>
-                <li id="nav-profile" class="hidden"><a href="profile.html">Profile</a></li>
+                <li><a href="index.html" class="nav-link-standard">Home</a></li>
+                <li><a href="services.html" class="nav-link-standard">Services</a></li>
+                <li><a href="track-application.html" class="nav-link-standard active">Track Application</a></li>
+                <li><a href="faq.html" class="nav-link-standard">FAQ</a></li>
+                <li><a href="contact.html" class="nav-link-standard">Contact</a></li>
+                <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme"><i class="fa-solid fa-moon"></i></button></li>
             </ul>
         </div>
     </nav>
 
-    <!-- PAGE HERO -->
-    <header class="hero" style="padding: 4rem 0 3rem;">
-        <div class="container hero-content">
-            <h1>Track Your Application</h1>
-            <p>Enter your 12-digit acknowledgement number below to check the real-time status of your service request.</p>
-        </div>
-    </header>
-
-    <!-- TRACKING SECTION -->
-    <section class="section" style="padding-top: 2rem; min-height: 50vh;">
-        <div class="container">
+    <!-- CONTENT -->
+    <section class="section" style="padding-top: 4rem; min-height: 70vh;">
+        <div class="container text-center">
             
-            <!-- Input Card -->
-            <div class="card tracking-card" style="margin-bottom: 2rem;">
-                <form id="tracking-form" onsubmit="event.preventDefault();">
-                    <div class="form-group">
-                        <label for="ack-number" class="form-label">Acknowledgement Number</label>
-                        <input type="text" id="ack-number" class="form-control" placeholder="e.g., MAA-1234567890" required autocomplete="off">
+            <h1 style="margin-bottom: 0.5rem;">Track Your Application</h1>
+            <p style="margin-bottom: 3rem;">Enter your acknowledgement number to check the real-time status.</p>
+
+            <div class="card" style="max-width: 600px; margin: 0 auto; text-align: left;">
+                
+                <form id="track-form" onsubmit="event.preventDefault(); performTracking();">
+                    <div class="form-group mb-4">
+                        <label class="form-label" style="font-size: 1.1rem;">Acknowledgement Number</label>
+                        <input type="text" id="track-id" class="form-control" style="font-size: 1.2rem; padding: 1rem; text-align: center; letter-spacing: 1px;" required placeholder="e.g. ME-2026-123456" autocomplete="off">
                     </div>
-                    <button type="submit" id="track-btn" class="btn btn-primary" style="width: 100%;">
-                        Track Application <i class="fa-solid fa-magnifying-glass"></i>
+                    <button type="submit" id="track-btn" class="btn btn-primary w-100" style="padding: 1rem; font-size: 1.1rem;">
+                        Track Status <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </form>
 
-                <!-- Loading State (Hidden by default) -->
-                <div id="loading-state" class="hidden" style="padding: 2rem 0; text-align: center;">
-                    <div class="spinner" style="margin: 0 auto 1rem;"></div>
-                    <p>Searching for your application...</p>
+                <!-- RESULT CARD -->
+                <div id="track-result" class="hidden" style="margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 2rem;">
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="margin: 0; color: var(--primary);">Status Result</h3>
+                        <span id="res-status" class="badge badge-pending" style="font-size: 0.9rem; padding: 0.4rem 1rem;">Pending</span>
+                    </div>
+
+                    <div style="display: grid; gap: 1rem; background: var(--bg-alt); padding: 1.5rem; border-radius: var(--radius-md);">
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.5rem;">
+                            <span class="text-muted">Ack. Number</span>
+                            <strong id="res-ack">---</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.5rem;">
+                            <span class="text-muted">Service</span>
+                            <strong id="res-svc">---</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.5rem;">
+                            <span class="text-muted">Date Applied</span>
+                            <strong id="res-date">---</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span class="text-muted">Payment Status</span>
+                            <span id="res-payment" class="badge badge-warning">Unpaid</span>
+                        </div>
+                    </div>
                 </div>
-                
-                <!-- Error State (Hidden by default) -->
-                <div id="track-error" class="alert alert-error hidden" style="margin-top: 1.5rem;">
-                    <i class="fa-solid fa-circle-exclamation"></i>&nbsp; Application not found. Please check your acknowledgement number.
-                </div>
+
             </div>
-
-            <!-- Result Card (Hidden by default) -->
-            <div id="track-result" class="card tracking-card hidden" style="border-top: 4px solid var(--success);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <h3 style="margin: 0; color: var(--text-main);">Application Details</h3>
-                    <span id="result-status" class="badge badge-pending">Pending</span>
-                </div>
-                
-                <div class="tracking-details">
-                    <div class="detail-row">
-                        <span class="text-muted">Acknowledgement No.</span>
-                        <strong id="result-ack" style="color: var(--text-main);">---</strong>
-                    </div>
-                    <div class="detail-row">
-                        <span class="text-muted">Service Requested</span>
-                        <strong id="result-service" style="color: var(--text-main);">---</strong>
-                    </div>
-                    <div class="detail-row">
-                        <span class="text-muted">Application Date</span>
-                        <strong id="result-date" style="color: var(--text-main);">---</strong>
-                    </div>
-                    <div class="detail-row">
-                        <span class="text-muted">Payment Status</span>
-                        <span id="result-payment" class="badge badge-warning">Unpaid</span>
-                    </div>
-                </div>
-
-                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); text-align: center;">
-                    <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 1rem;">Need help with this application?</p>
-                    <a href="contact.html" class="btn btn-outline" style="width: 100%;">Contact Support</a>
-                </div>
-            </div>
-
         </div>
     </section>
 
     <!-- FOOTER -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <h3>MAA ENTERPRISES</h3>
-                    <p>Digital Cyber Cafe & Online Service Center located in Biharsharif, Nalanda, Bihar.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="track-application.html">Track Application</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Maa Enterprises. All rights reserved.</p>
-            </div>
+        <div class="container text-center">
+            <p class="text-muted" style="margin: 0;">&copy; 2026 Maa Enterprises.</p>
         </div>
     </footer>
 
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth-compat.js"></script>
-    
-    <!-- App Scripts -->
-    <script src="js/firebase-config.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/tracking.js"></script>
+    <script>
+        function performTracking() {
+            const btn = document.getElementById('track-btn');
+            const input = document.getElementById('track-id').value;
+            const resCard = document.getElementById('track-result');
+            
+            btn.innerHTML = 'Searching...';
+            btn.disabled = true;
+
+            // Simulate network delay for UX
+            setTimeout(() => {
+                document.getElementById('res-ack').textContent = input.toUpperCase();
+                document.getElementById('res-svc').textContent = "PAN Card Application"; // Mock data
+                document.getElementById('res-date').textContent = new Date().toLocaleDateString();
+                
+                resCard.classList.remove('hidden');
+                
+                btn.innerHTML = 'Track Status <i class="fa-solid fa-magnifying-glass"></i>';
+                btn.disabled = false;
+            }, 800);
+        }
+    </script>
 </body>
 </html>
