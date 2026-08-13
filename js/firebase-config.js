@@ -2,14 +2,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// COPY_FROM_FIREBASE_CONSOLE: Replace placeholder values with your exact config
 const firebaseConfig = {
-  apiKey: "COPY_FROM_FIREBASE_CONSOLE",
-  authDomain: "COPY_FROM_FIREBASE_CONSOLE",
+  apiKey: "AIzaSyDt9NaK6Qcj7toLyJ2pFtsPSK_G9_2BK5A",
+  authDomain: "maa-enterprises-cyber.firebaseapp.com",
   projectId: "maa-enterprises-cyber",
-  storageBucket: "COPY_FROM_FIREBASE_CONSOLE",
-  messagingSenderId: "COPY_FROM_FIREBASE_CONSOLE",
-  appId: "COPY_FROM_FIREBASE_CONSOLE"
+  storageBucket: "maa-enterprises-cyber.firebasestorage.app",
+  messagingSenderId: "1083359884535",
+  appId: "1:1083359884535:web:f3d22b6fe69d4df3cb4ff2"
 };
 
 const app = initializeApp(firebaseConfig);
