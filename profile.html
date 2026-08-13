@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Maa Enterprises</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Maa Enterprises</a>
+            <div class="nav-links">
+                <a href="applications.html">My Applications</a>
+                <a href="index.html">Home</a>
+            </div>
+        </div>
+    </nav>
+    <main class="container section" style="max-width: 600px; min-height: 70vh;">
+        <div id="loading-state" class="text-center">Loading profile...</div>
+        
+        <div id="profile-card" class="card hidden">
+            <h2>My Profile</h2>
+            <hr style="margin: 16px 0; border:0; border-top:1px solid var(--border-color);">
+            <div id="profile-error" class="error-msg hidden"></div>
+            
+            <div class="form-group">
+                <label class="form-label text-muted">Full Name</label>
+                <p id="prof-name" style="font-size: 1.1rem; font-weight: 500;">-</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label text-muted">Email Address</label>
+                <p id="prof-email" style="font-size: 1.1rem;">-</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label text-muted">Account Created</label>
+                <p id="prof-date">-</p>
+            </div>
+            <br>
+            <a href="#" id="logout-btn-profile" class="btn btn-outline">Logout</a>
+        </div>
+    </main>
+    <footer class="footer"><p>&copy; 2026 Maa Enterprises Cyber Cafe.</p></footer>
+    <script type="module" src="js/profile.js"></script>
+</body>
+</html>
