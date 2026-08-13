@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        // This will throw permission-denied under existing rules
         const appSnap = await getDocs(collection(db, "applications"));
         safeText("stat-total", appSnap.size.toString());
         
@@ -31,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
         if (error.code === 'permission-denied') {
             alertBox.className = "alert alert-error";
-            alertBox.textContent = "Backend Authorization Required: Current Firestore rules prevent admin dashboard reads. Fix rules to view global stats.";
+            alertBox.textContent = "Backend Authorization Required: Current Firestore security rules prevent admin dashboard metric reads. Ensure your Admin UID is permitted in Firestore Rules.";
         }
     }
 });
