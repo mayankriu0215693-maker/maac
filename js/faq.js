@@ -1,5 +1,5 @@
 import { db } from "./firebase-config.js";
-import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { collection, getDocs, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const list = document.getElementById("faq-list");
@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             
             const qEl = document.createElement("h3");
             qEl.textContent = data.question || "FAQ";
+            qEl.style.marginBottom = "8px";
             
             const aEl = document.createElement("p");
             aEl.className = "text-muted";
-            aEl.style.marginTop = "8px";
             aEl.textContent = data.answer || "";
             
             card.appendChild(qEl);
