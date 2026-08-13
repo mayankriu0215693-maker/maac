@@ -1,6 +1,11 @@
 import { auth, db } from "./firebase-config.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+function safeText(id, text) {
+    const el = document.getElementById(id);
+    if(el) el.textContent = text || "Not available";
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const loading = document.getElementById("loading-state");
@@ -10,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             try {
-                // Rule: read own user doc
                 const docRef = doc(db, "users", user.uid);
                 const docSnap = await getDoc(docRef);
                 
@@ -19,31 +23,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    document.getElementById("prof-name").textContent = data.name || "Not provided";
-                    document.getElementById("prof-email").textContent = data.email || user.email;
-                    
-                    if (data.createdAt) {
-                        document.getElementById("prof-date").textContent = data.createdAt.toDate().toLocaleDateString();
+                    safeText("prof-name", data.name);
+                    safeText("prof-email", data.email || user.email);
+                    if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+                        safeText("prof-date", data.createdAt.toDate().toLocaleDateString());
                     }
                 } else {
-                    document.getElementById("prof-email").textContent = user.email;
+                    safeText("prof-email", user.email);
                     errorDiv.textContent = "Profile details not found in database.";
-                    errorDiv.classList.remove("hidden");
+                    errorDiv.className = "alert alert-warning";
                 }
             } catch (error) {
                 loading.classList.add("hidden");
-                card.classList.remove("hidden");
-                errorDiv.textContent = "Error loading profile data. " + error.message;
-                errorDiv.classList.remove("hidden");
+                errorDiv.textContent = "Error loading profile data: " + error.message;
+                errorDiv.className = "alert alert-error";
             }
         } else {
             window.location.href = "login.html";
         }
-    });
-
-    document.getElementById("logout-btn-profile").addEventListener("click", async (e) => {
-        e.preventDefault();
-        await signOut(auth);
-        window.location.href = "login.html";
     });
 });
