@@ -1,6 +1,7 @@
 import { db } from "../firebase-config.js";
 import { collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { requireAdminAuth } from "./admin-auth.js";
+import { getStatusBadgeClass } from "../whatsapp.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     requireAdminAuth();
@@ -13,40 +14,72 @@ document.addEventListener("DOMContentLoaded", async () => {
     async function loadApps() {
         loading.classList.remove("hidden");
         list.innerHTML = "";
+        alertBox.className = "hidden";
         
         try {
-            // WILL FAIL if rules restrict global read
             const snap = await getDocs(collection(db, "applications"));
             loading.classList.add("hidden");
             
             if(snap.empty) {
-                alertBox.innerText = "No applications found.";
-                alertBox.classList.remove("hidden");
+                alertBox.textContent = "No applications found.";
+                alertBox.className = "alert alert-warning";
                 return;
             }
 
             list.classList.remove("hidden");
             snap.forEach(docSnap => {
                 const data = docSnap.data();
+                
                 const card = document.createElement("div");
                 card.className = "card";
-                card.innerHTML = `
-                    <div style="display:flex; justify-content:space-between;">
-                        <strong>${data.acknowledgementNumber}</strong>
-                        <span class="badge badge-${data.status.toLowerCase()}">${data.status}</span>
-                    </div>
-                    <p class="text-muted">${data.serviceName}</p>
-                    <p><strong>Customer:</strong> ${data.customerName}</p>
-                    <p><strong>Phone:</strong> ${data.mobile}</p>
-                    <hr style="margin:10px 0; border:0; border-top:1px solid #e5e7eb;">
-                    <p><strong>Payment:</strong> <span class="badge badge-${data.paymentStatus.toLowerCase()}">${data.paymentStatus}</span></p>
-                    <br>
-                    <button class="btn btn-outline edit-btn" data-id="${docSnap.id}" data-status="${data.status}" data-pay="${data.paymentStatus}">Manage</button>
-                `;
+                
+                const header = document.createElement("div");
+                header.style = "display:flex; justify-content:space-between; margin-bottom:8px;";
+                const ackS = document.createElement("strong");
+                ackS.textContent = data.acknowledgementNumber || "N/A";
+                const sBadge = document.createElement("span");
+                sBadge.textContent = data.status || "Pending";
+                sBadge.className = "badge " + getStatusBadgeClass(data.status);
+                header.append(ackS, sBadge);
+                
+                const sName = document.createElement("p");
+                sName.className = "text-muted";
+                sName.textContent = data.serviceName || "Service";
+                
+                const cName = document.createElement("p");
+                cName.innerHTML = `<strong>Customer:</strong> `;
+                const cSpan = document.createElement("span");
+                cSpan.textContent = data.customerName || "N/A";
+                cName.appendChild(cSpan);
+                
+                const mob = document.createElement("p");
+                mob.innerHTML = `<strong>Phone:</strong> `;
+                const mSpan = document.createElement("span");
+                mSpan.textContent = data.mobile || "N/A";
+                mob.appendChild(mSpan);
+                
+                const hr = document.createElement("hr");
+                hr.style = "margin:10px 0; border:0; border-top:1px solid var(--border);";
+                
+                const pName = document.createElement("p");
+                pName.innerHTML = `<strong>Payment:</strong> `;
+                const pBadge = document.createElement("span");
+                pBadge.textContent = data.paymentStatus || "Pending";
+                pBadge.className = "badge " + getStatusBadgeClass(data.paymentStatus);
+                pName.appendChild(pBadge);
+                
+                const mngBtn = document.createElement("button");
+                mngBtn.className = "btn btn-outline edit-btn";
+                mngBtn.style.marginTop = "12px";
+                mngBtn.textContent = "Manage";
+                mngBtn.dataset.id = docSnap.id;
+                mngBtn.dataset.status = data.status || "Pending";
+                mngBtn.dataset.pay = data.paymentStatus || "Pending";
+                
+                card.append(header, sName, cName, mob, hr, pName, mngBtn);
                 list.appendChild(card);
             });
 
-            // Attach edit listeners
             document.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     document.getElementById("edit-id").value = e.target.dataset.id;
@@ -58,12 +91,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             loading.classList.add("hidden");
+            alertBox.className = "alert alert-error";
             if (error.code === 'permission-denied') {
-                alertBox.innerHTML = "<strong>Backend Authorization Required:</strong> Current Firestore Rules block reading applications. Action required by developer.";
+                alertBox.textContent = "Backend Authorization Required: Current rules block reading all applications. Please update Firestore security rules.";
             } else {
-                alertBox.innerText = error.message;
+                alertBox.textContent = error.message;
             }
-            alertBox.classList.remove("hidden");
         }
     }
 
@@ -80,11 +113,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const newStatus = document.getElementById("edit-status").value;
         const newPay = document.getElementById("edit-payment").value;
 
-        btn.disabled = true;
-        btn.innerText = "Saving...";
+        btn.disabled = true; btn.textContent = "Saving...";
         
         try {
-            // WILL FAIL if rules restrict client-side update
             await updateDoc(doc(db, "applications", id), {
                 status: newStatus,
                 paymentStatus: newPay,
@@ -95,13 +126,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             loadApps();
         } catch (error) {
             if (error.code === 'permission-denied') {
-                alert("Permission Denied: You do not have backend authorization to update records. Contact the developer to update Firestore rules.");
+                alert("Permission Denied: You do not have write access under current rules.");
             } else {
                 alert("Error: " + error.message);
             }
         } finally {
-            btn.disabled = false;
-            btn.innerText = "Save Changes";
+            btn.disabled = false; btn.textContent = "Save Changes";
         }
     });
 });
