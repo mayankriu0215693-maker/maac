@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// Preserving existing config exactly as requested
 const firebaseConfig = {
   apiKey: "AIzaSyDt9NaK6Qcj7toLyJ2pFtsPSK_G9_2BK5A",
   authDomain: "maa-enterprises-cyber.firebaseapp.com",
