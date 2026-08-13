@@ -1,7 +1,12 @@
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { generateWhatsAppLink } from "./whatsapp.js";
+import { generateWhatsAppLink, getStatusBadgeClass } from "./whatsapp.js";
+
+function safeText(id, text) {
+    const el = document.getElementById(id);
+    if(el) el.textContent = text || "N/A";
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     let currentUser = null;
@@ -28,13 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const errorDiv = document.getElementById("track-error");
         const resultDiv = document.getElementById("track-result");
         
-        btn.disabled = true;
-        btn.innerText = "Searching...";
-        errorDiv.classList.add("hidden");
-        resultDiv.classList.add("hidden");
+        btn.disabled = true; btn.textContent = "Searching...";
+        errorDiv.classList.add("hidden"); resultDiv.classList.add("hidden");
 
         try {
-            // Secure Query: Enforce rules where userId == current Auth UID
             const q = query(
                 collection(db, "applications"), 
                 where("userId", "==", currentUser.uid),
@@ -44,33 +46,33 @@ document.addEventListener("DOMContentLoaded", () => {
             const snap = await getDocs(q);
             
             if (snap.empty) {
-                errorDiv.innerText = "Application not found. Ensure the number is correct and belongs to this account.";
-                errorDiv.classList.remove("hidden");
+                errorDiv.textContent = "Application not found. Ensure the number is correct and belongs to your account.";
+                errorDiv.className = "alert alert-error";
             } else {
                 const data = snap.docs[0].data();
-                document.getElementById("res-ack").innerText = data.acknowledgementNumber;
-                document.getElementById("res-service").innerText = data.serviceName;
-                document.getElementById("res-date").innerText = "Submitted: " + (data.createdAt ? data.createdAt.toDate().toLocaleDateString() : "N/A");
+                safeText("res-ack", data.acknowledgementNumber);
+                safeText("res-service", data.serviceName);
                 
-                const statusBadge = document.getElementById("res-status");
-                statusBadge.innerText = data.status;
-                statusBadge.className = `badge badge-${data.status.toLowerCase()}`;
+                const dateStr = (data.createdAt && typeof data.createdAt.toDate === 'function') 
+                    ? data.createdAt.toDate().toLocaleDateString() : "N/A";
+                safeText("res-date", "Submitted: " + dateStr);
+                
+                const statusEl = document.getElementById("res-status");
+                statusEl.textContent = data.status || "Pending";
+                statusEl.className = "badge " + getStatusBadgeClass(data.status);
 
-                const payBadge = document.getElementById("res-payment");
-                payBadge.innerText = data.paymentStatus;
-                payBadge.className = `badge badge-${data.paymentStatus.toLowerCase()}`;
+                const payEl = document.getElementById("res-payment");
+                payEl.textContent = data.paymentStatus || "Pending";
+                payEl.className = "badge " + getStatusBadgeClass(data.paymentStatus);
 
                 document.getElementById("res-whatsapp").href = generateWhatsAppLink(data);
-                
                 resultDiv.classList.remove("hidden");
             }
         } catch (error) {
-            console.error(error);
-            errorDiv.innerText = "Error searching records. " + error.message;
-            errorDiv.classList.remove("hidden");
+            errorDiv.textContent = "Error searching records: " + error.message;
+            errorDiv.className = "alert alert-error";
         } finally {
-            btn.disabled = false;
-            btn.innerText = "Track Status";
+            btn.disabled = false; btn.textContent = "Track Status";
         }
     });
 });
