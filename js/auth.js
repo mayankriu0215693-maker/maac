@@ -5,9 +5,8 @@ import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs
 const signupForm = document.getElementById("signup-form");
 const loginForm = document.getElementById("login-form");
 
-// Helper to format Firebase errors
-function getFriendlyError(errorCode) {
-    switch (errorCode) {
+function getErrorMessage(code) {
+    switch (code) {
         case 'auth/email-already-in-use': return "This email is already registered. Please login.";
         case 'auth/invalid-credential': return "Invalid email or password.";
         case 'auth/user-not-found': return "No account found with this email.";
@@ -18,16 +17,19 @@ function getFriendlyError(errorCode) {
     }
 }
 
+function safeText(id, text) {
+    const el = document.getElementById(id);
+    if(el) el.textContent = text;
+}
+
 if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const btn = document.getElementById("reg-btn");
-        const err = document.getElementById("auth-error");
+        const errDiv = document.getElementById("auth-error");
         
-        btn.disabled = true; 
-        btn.innerText = "Creating Account..."; 
-        err.innerText = "";
-        err.classList.remove("error-box");
+        btn.disabled = true; btn.textContent = "Creating Account..."; 
+        errDiv.className = "hidden";
         
         try {
             const email = document.getElementById("reg-email").value.trim();
@@ -37,7 +39,6 @@ if (signupForm) {
             const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
             const user = userCredential.user;
 
-            // Security Rule: allow create: if request.auth != null && request.auth.uid == userId
             await setDoc(doc(db, "users", user.uid), {
                 uid: user.uid,
                 name: name,
@@ -47,10 +48,9 @@ if (signupForm) {
 
             window.location.href = "index.html";
         } catch (error) {
-            err.classList.add("error-box");
-            err.innerText = getFriendlyError(error.code);
-            btn.disabled = false; 
-            btn.innerText = "Sign Up";
+            errDiv.className = "alert alert-error";
+            safeText("auth-error", getErrorMessage(error.code));
+            btn.disabled = false; btn.textContent = "Sign Up";
         }
     });
 }
@@ -59,12 +59,10 @@ if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const btn = document.getElementById("login-btn");
-        const err = document.getElementById("auth-error");
+        const errDiv = document.getElementById("auth-error");
         
-        btn.disabled = true; 
-        btn.innerText = "Logging in..."; 
-        err.innerText = "";
-        err.classList.remove("error-box");
+        btn.disabled = true; btn.textContent = "Logging in..."; 
+        errDiv.className = "hidden";
         
         try {
             const email = document.getElementById("login-email").value.trim();
@@ -73,10 +71,9 @@ if (loginForm) {
             await signInWithEmailAndPassword(auth, email, pass);
             window.location.href = "index.html";
         } catch (error) {
-            err.classList.add("error-box");
-            err.innerText = getFriendlyError(error.code);
-            btn.disabled = false; 
-            btn.innerText = "Login";
+            errDiv.className = "alert alert-error";
+            safeText("auth-error", getErrorMessage(error.code));
+            btn.disabled = false; btn.textContent = "Login";
         }
     });
 }
