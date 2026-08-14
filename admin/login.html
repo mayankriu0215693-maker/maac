@@ -4,40 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - MAA ENTERPRISES</title>
-    <!-- Use root CSS file -->
     <link rel="stylesheet" href="../auth-style.css">
 </head>
 <body class="auth-body">
-
     <div class="auth-wrapper">
         <div class="auth-card" style="border-top-color: #2c3e50;">
-            
             <div class="auth-brand-logo">
                 <h1 style="color: #2c3e50;">MAA ENTERPRISES</h1>
                 <p style="color: #7f8c8d;">Admin Portal</p>
             </div>
-
-            <div id="admin-alert" class="auth-alert error"></div>
-
-            <div class="auth-input-group">
-                <label>Admin ID</label>
-                <input type="text" id="admin-id" placeholder="Enter Admin ID" autocomplete="off">
-            </div>
-
-            <div class="auth-input-group">
-                <label>Password</label>
-                <input type="password" id="admin-pwd" placeholder="Enter password">
-            </div>
-
-            <button id="btn-admin-login" class="btn-primary" style="background: #2c3e50; margin-top: 10px;">Secure Login</button>
+            
+            <div id="admin-alert" class="auth-alert error" style="display: none;"></div>
+            
+            <form id="admin-login-form">
+                <div class="auth-input-group">
+                    <label>Admin ID / Email</label>
+                    <input type="text" id="admin-id" placeholder="Enter Admin ID or Email" required autocomplete="username">
+                </div>
+                <div class="auth-input-group">
+                    <label>Password</label>
+                    <input type="password" id="admin-pwd" placeholder="Enter password" required autocomplete="current-password">
+                </div>
+                <button type="submit" id="btn-admin-login" class="btn-primary" style="background: #2c3e50; margin-top: 10px;">Secure Login</button>
+            </form>
 
             <div class="auth-footer">
-                <a href="../index.html" style="color: #7f8c8d;">← Return to Public Website</a>
-                <span class="security-badge">🔒 Encrypted</span>
+                <a href="../index.html" style="color: #7f8c8d;">&larr; Return to Public Website</a>
+                <span class="security-badge">&#128274; Encrypted</span>
             </div>
         </div>
     </div>
 
-    <script type="module" src="../admin-auth.js"></script>
+    <!-- Sahi script path -->
+    <script type="module" src="../js/admin/admin-auth.js"></script>
 </body>
 </html>
