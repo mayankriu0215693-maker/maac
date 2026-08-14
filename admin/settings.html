@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Settings - MAA ENTERPRISES</title>
+    <!-- Use root CSS file -->
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -19,15 +20,15 @@
                 <h3>Customer Mobile OTP Login</h3>
                 <p>Enable or disable the +91 mobile authentication option for customers.</p>
                 
-                <div id="settings-status">Loading status...</div>
+                <div id="settings-status" style="margin-bottom: 15px; font-weight: bold;">Loading status...</div>
                 
-                <button id="btn-enable-otp" onclick="toggleOTP(true)" style="display:none;">Enable OTP</button>
-                <button id="btn-disable-otp" onclick="toggleOTP(false)" style="display:none;">Disable OTP</button>
+                <button id="btn-enable-otp" onclick="toggleOTP(true)" style="display:none; background-color: #28a745; color: white;">Enable Mobile OTP</button>
+                <button id="btn-disable-otp" onclick="toggleOTP(false)" style="display:none; background-color: #dc3545; color: white;">Disable Mobile OTP</button>
             </div>
         </div>
     </div>
 
-    <!-- Ensure Auth Protection is loaded -->
+    <!-- Ensure Auth Protection is loaded before settings -->
     <script type="module" src="../admin-auth.js"></script>
     <script type="module" src="../admin-settings.js"></script>
 </body>
