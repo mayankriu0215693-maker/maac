@@ -1,54 +1,42 @@
-import { db } from "../firebase-config.js";
-import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { requireAdminAuth } from "./admin-auth.js";
+import { db } from './firebase-config.js';
+import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-document.addEventListener("DOMContentLoaded", async () => {
-    requireAdminAuth();
-    
-    const alertBox = document.getElementById("backend-alert");
-    const form = document.getElementById("settings-form");
-    const btn = document.getElementById("save-btn");
-    
+const authSettingsRef = doc(db, "settings", "auth");
+
+async function loadCurrentSettings() {
     try {
-        const docSnap = await getDoc(doc(db, "settings", "general"));
+        const docSnap = await getDoc(authSettingsRef);
         if (docSnap.exists()) {
-            const data = docSnap.data();
-            document.getElementById("set-name").value = data.businessName || "";
-            document.getElementById("set-phone").value = data.phone || "";
-            document.getElementById("set-address").value = data.address || "";
+            const isEnabled = docSnap.data().mobileOtpEnabled;
+            updateUI(isEnabled);
+        } else {
+            // Default initialization if document doesn't exist
+            await setDoc(authSettingsRef, { mobileOtpEnabled: true }, { merge: true });
+            updateUI(true);
         }
     } catch (error) {
-        if(error.code === 'permission-denied') {
-            alertBox.textContent = "Cannot read secure settings: Permission denied by backend rules.";
-        } else {
-            alertBox.textContent = "Error: " + error.message;
-        }
-        alertBox.className = "alert alert-warning";
+        document.getElementById('settings-status').innerText = "Error loading settings. Check your permissions.";
     }
+}
 
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        btn.disabled = true; btn.textContent = "Authorizing...";
-        alertBox.className = "hidden";
-        
-        try {
-            await setDoc(doc(db, "settings", "general"), {
-                businessName: document.getElementById("set-name").value,
-                phone: document.getElementById("set-phone").value,
-                address: document.getElementById("set-address").value
-            }, { merge: true });
-            
-            alert("Settings updated in Firestore.");
-        } catch (error) {
-            if (error.code === 'permission-denied') {
-                alertBox.textContent = "Permission Denied: Cannot update global settings under current strict rules.";
-                alertBox.className = "alert alert-error";
-            } else {
-                alertBox.textContent = "Error: " + error.message;
-                alertBox.className = "alert alert-error";
-            }
-        } finally {
-            btn.disabled = false; btn.textContent = "Save Settings";
-        }
-    });
+window.toggleOTP = async function(state) {
+    document.getElementById('settings-status').innerText = "Saving...";
+    try {
+        await setDoc(authSettingsRef, { mobileOtpEnabled: state }, { merge: true });
+        updateUI(state);
+    } catch (error) {
+        document.getElementById('settings-status').innerText = "Update failed. You may lack permission.";
+    }
+}
+
+function updateUI(isEnabled) {
+    const statusText = isEnabled ? "Currently ON (Customers can use Phone OTP)" : "Currently OFF (Google Login ONLY)";
+    document.getElementById('settings-status').innerText = statusText;
+    
+    document.getElementById('btn-enable-otp').style.display = isEnabled ? 'none' : 'inline-block';
+    document.getElementById('btn-disable-otp').style.display = isEnabled ? 'inline-block' : 'none';
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadCurrentSettings();
 });
