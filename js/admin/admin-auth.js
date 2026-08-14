@@ -6,24 +6,25 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-// --- ADMIN PAGE PROTECTION ---
-const isAdminLoginPage = window.location.pathname.includes('/admin/login.html');
+const currentPath = window.location.pathname;
+const isAdminLoginPage = currentPath.includes('/admin/login.html');
 
+// --- ADMIN AUTHORIZATION GUARD ---
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-        // Verify Authorization Role
         try {
             const adminDoc = await getDoc(doc(db, "admins", user.uid));
-            if (!adminDoc.exists() || adminDoc.data().role !== "admin" || !adminDoc.data().active) {
-                throw new Error("Unauthorized");
-            }
             
-            // Valid Admin
-            if (isAdminLoginPage) {
-                window.location.href = 'index.html'; // Redirect to dashboard
+            if (adminDoc.exists() && adminDoc.data().role === "admin" && adminDoc.data().active === true) {
+                // Authorized Admin
+                if (isAdminLoginPage) {
+                    window.location.href = 'index.html'; // Move to dashboard relative to admin folder
+                }
+            } else {
+                throw new Error("Unauthorized customer account.");
             }
         } catch (error) {
-            // Normal customer wandered into admin area -> Kick them out
+            // Unauthorized (Customers attempting to access /admin/ route)
             await signOut(auth);
             if (!isAdminLoginPage) {
                 window.location.href = 'login.html';
@@ -32,14 +33,14 @@ onAuthStateChanged(auth, async (user) => {
             }
         }
     } else {
-        // Not logged in
+        // Not logged in at all
         if (!isAdminLoginPage) {
             window.location.href = 'login.html';
         }
     }
 });
 
-// --- ADMIN LOGIN LOGIC ---
+// --- ADMIN LOGIN ---
 window.adminLogin = async function() {
     const adminId = document.getElementById('admin-id').value.trim();
     const adminPwd = document.getElementById('admin-pwd').value;
@@ -49,14 +50,13 @@ window.adminLogin = async function() {
         return;
     }
 
-    // Security Mapping: Obfuscate the visible Admin ID into a Firebase Email
+    // Direct mapping string - backend holds actual password securely
     const internalEmail = `admin_${adminId}@maa-internal.com`;
 
     try {
+        // Sign in. Guard logic in onAuthStateChanged will handle redirect or ejection.
         await signInWithEmailAndPassword(auth, internalEmail, adminPwd);
-        // Authorization check happens automatically in onAuthStateChanged
     } catch (error) {
-        // Generic error to prevent credential enumeration
         showAdminError("Invalid Admin ID or password.");
     }
 }
@@ -66,7 +66,7 @@ window.adminLogout = async function() {
         await signOut(auth);
         window.location.href = 'login.html';
     } catch (error) {
-        console.error("Logout failed");
+        console.error("Logout failed.");
     }
 }
 
