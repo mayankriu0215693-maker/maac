@@ -4,34 +4,39 @@ import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.4.0/f
 const authSettingsRef = doc(db, "settings", "auth");
 
 async function loadCurrentSettings() {
+    const statusText = document.getElementById('settings-status');
     try {
         const docSnap = await getDoc(authSettingsRef);
         if (docSnap.exists()) {
-            const isEnabled = docSnap.data().mobileOtpEnabled;
-            updateUI(isEnabled);
+            updateUI(docSnap.data().mobileOtpEnabled);
         } else {
-            // Default initialization if document doesn't exist
-            await setDoc(authSettingsRef, { mobileOtpEnabled: true }, { merge: true });
-            updateUI(true);
+            // Initialize document safely if not found
+            await setDoc(authSettingsRef, { mobileOtpEnabled: false }, { merge: true });
+            updateUI(false);
         }
     } catch (error) {
-        document.getElementById('settings-status').innerText = "Error loading settings. Check your permissions.";
+        statusText.innerText = "Error loading settings. Check your permissions.";
     }
 }
 
 window.toggleOTP = async function(state) {
-    document.getElementById('settings-status').innerText = "Saving...";
+    const statusText = document.getElementById('settings-status');
+    statusText.innerText = "Saving update...";
+    
     try {
+        // Enforced securely by Firestore rules via the caller's Admin Token
         await setDoc(authSettingsRef, { mobileOtpEnabled: state }, { merge: true });
         updateUI(state);
     } catch (error) {
-        document.getElementById('settings-status').innerText = "Update failed. You may lack permission.";
+        statusText.innerText = "Update failed. You may lack permission.";
     }
 }
 
 function updateUI(isEnabled) {
-    const statusText = isEnabled ? "Currently ON (Customers can use Phone OTP)" : "Currently OFF (Google Login ONLY)";
-    document.getElementById('settings-status').innerText = statusText;
+    const statusText = document.getElementById('settings-status');
+    statusText.innerText = isEnabled 
+        ? "Currently ON (Customers can use Phone OTP)" 
+        : "Currently OFF (Google Login ONLY)";
     
     document.getElementById('btn-enable-otp').style.display = isEnabled ? 'none' : 'inline-block';
     document.getElementById('btn-disable-otp').style.display = isEnabled ? 'inline-block' : 'none';
