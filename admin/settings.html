@@ -3,47 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Settings | Admin</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Admin Settings - MAA ENTERPRISES</title>
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <div class="admin-layout">
-        <aside class="admin-sidebar">
-            <h2>MAA ADMIN</h2>
-            <div class="admin-nav">
-                <a href="index.html">Dashboard</a>
-                <a href="applications.html">Applications</a>
-                <a href="services.html">Services</a>
-                <a href="faqs.html">FAQs</a>
-                <a href="settings.html" class="active">Settings</a>
-                <hr style="border:0; border-top: 1px solid #334155; margin: 16px 0;">
-                <a href="#" id="admin-logout" style="color:#ef4444;">Secure Logout</a>
-            </div>
-        </aside>
-        <main class="admin-content">
-            <h1 style="margin-bottom:24px;">Global Configuration</h1>
+    <div class="admin-wrapper">
+        <nav>
+            <button onclick="adminLogout()">Logout</button>
+        </nav>
+        
+        <div class="content">
+            <h2>Authentication Settings</h2>
             
-            <div id="backend-alert" class="hidden"></div>
-            
-            <div class="card" style="max-width: 600px;">
-                <form id="settings-form">
-                    <div class="form-group">
-                        <label class="form-label">Business Name</label>
-                        <input type="text" id="set-name" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Phone / WhatsApp</label>
-                        <input type="text" id="set-phone" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Address</label>
-                        <textarea id="set-address" class="form-control" rows="3"></textarea>
-                    </div>
-                    <button type="submit" id="save-btn" class="btn btn-primary">Commit Settings</button>
-                </form>
+            <div class="setting-card">
+                <h3>Customer Mobile OTP Login</h3>
+                <p>Enable or disable the +91 mobile authentication option for customers.</p>
+                
+                <div id="settings-status">Loading status...</div>
+                
+                <button id="btn-enable-otp" onclick="toggleOTP(true)" style="display:none;">Enable OTP</button>
+                <button id="btn-disable-otp" onclick="toggleOTP(false)" style="display:none;">Disable OTP</button>
             </div>
-        </main>
+        </div>
     </div>
-    <script type="module" src="../js/admin/admin-settings.js"></script>
+
+    <!-- Ensure Auth Protection is loaded -->
+    <script type="module" src="../admin-auth.js"></script>
+    <script type="module" src="../admin-settings.js"></script>
 </body>
 </html>
