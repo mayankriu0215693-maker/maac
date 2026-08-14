@@ -4,35 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Applications | Admin</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="admin-layout">
+        <!-- Sidebar -->
         <aside class="admin-sidebar">
-            <h2>MAA ADMIN</h2>
-            <div class="admin-nav">
-                <a href="index.html">Dashboard</a>
-                <a href="applications.html" class="active">Applications</a>
-                <a href="services.html">Services</a>
-                <a href="faqs.html">FAQs</a>
-                <a href="settings.html">Settings</a>
-                <hr style="border:0; border-top: 1px solid #334155; margin: 16px 0;">
-                <a href="#" id="admin-logout" style="color:#ef4444;">Secure Logout</a>
+            <div class="admin-brand">
+                <h2>MAA ADMIN</h2>
+                <span class="badge">Live</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="index.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                <a href="applications.html" class="active"><i class="fa-solid fa-folder-open"></i> Applications</a>
+                <a href="services.html"><i class="fa-solid fa-list-check"></i> Services</a>
+                <a href="faqs.html"><i class="fa-solid fa-circle-question"></i> FAQs</a>
+                <a href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+            </nav>
+            <div class="admin-user-box">
+                <span style="font-size: 0.7rem; text-transform: uppercase; color: #64748b; font-weight: 700;">Logged In Admin</span>
+                <p id="admin-user-email" class="admin-user-email">Syncing...</p>
+                <a href="#" id="admin-logout" class="admin-logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Secure Logout</a>
             </div>
         </aside>
+
+        <!-- Main Content -->
         <main class="admin-content">
-            <h1 style="margin-bottom: 24px;">Application Management</h1>
-            
+            <div class="admin-topbar">
+                <div>
+                    <h1 class="admin-title">Customer Applications</h1>
+                    <p style="color: var(--admin-text-muted); font-size: 0.95rem; margin-top: 4px;">Review and manage incoming service applications</p>
+                </div>
+            </div>
+
             <div id="backend-alert" class="hidden"></div>
-            <div id="loading-state">Syncing secure database...</div>
-            <div id="app-list" class="grid hidden"></div>
+            <div id="loading-state" style="text-align: center; padding: 40px; color: var(--admin-text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Syncing secure database...</div>
+            
+            <div id="app-list" class="grid-cards hidden"></div>
         </main>
     </div>
-    
+
+    <!-- Edit Application Modal -->
     <div id="edit-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="color:var(--text-main);">Update Status</h3>
+                <h3 style="font-size: 1.25rem; font-weight: 700;">Update Application Status</h3>
                 <button id="close-modal" class="modal-close">&times;</button>
             </div>
             <form id="update-form">
@@ -53,10 +70,13 @@
                         <option value="Verified">Verified</option>
                     </select>
                 </div>
-                <button type="submit" id="save-btn" class="btn btn-primary" style="width:100%; margin-top:8px;">Commit Changes to Backend</button>
+                <button type="submit" id="save-btn" class="btn btn-primary" style="width:100%; margin-top: 12px; padding: 14px;">
+                    Commit Changes
+                </button>
             </form>
         </div>
     </div>
+
     <script type="module" src="../js/admin/admin-applications.js"></script>
 </body>
 </html>
