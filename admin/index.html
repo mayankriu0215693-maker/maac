@@ -4,44 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Admin</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="admin-layout">
+        <!-- Sidebar -->
         <aside class="admin-sidebar">
-            <h2>MAA ADMIN</h2>
-            <div class="admin-nav">
-                <a href="index.html" class="active">Dashboard</a>
-                <a href="applications.html">Applications</a>
-                <a href="services.html">Services</a>
-                <a href="faqs.html">FAQs</a>
-                <a href="settings.html">Settings</a>
-                <hr style="border:0; border-top: 1px solid #334155; margin: 16px 0;">
-                <p id="admin-user-email" style="font-size:0.85rem; color:#94a3b8; word-break:break-all; margin-bottom:8px;"></p>
-                <a href="#" id="admin-logout" style="color:#ef4444;">Secure Logout</a>
+            <div class="admin-brand">
+                <h2>MAA ADMIN</h2>
+                <span class="badge">Live</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="index.html" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                <a href="applications.html"><i class="fa-solid fa-folder-open"></i> Applications</a>
+                <a href="services.html"><i class="fa-solid fa-list-check"></i> Services</a>
+                <a href="faqs.html"><i class="fa-solid fa-circle-question"></i> FAQs</a>
+                <a href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+            </nav>
+            <div class="admin-user-box">
+                <span style="font-size: 0.7rem; text-transform: uppercase; color: #64748b; font-weight: 700;">Logged In Admin</span>
+                <p id="admin-user-email" class="admin-user-email">Syncing...</p>
+                <a href="#" id="admin-logout" class="admin-logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Secure Logout</a>
             </div>
         </aside>
+
+        <!-- Main Content -->
         <main class="admin-content">
-            <h1 style="margin-bottom: 24px;">System Dashboard</h1>
-            
+            <div class="admin-topbar">
+                <div>
+                    <h1 class="admin-title">System Dashboard</h1>
+                    <p style="color: var(--admin-text-muted); font-size: 0.95rem; margin-top: 4px;">Live overview of cyber cafe applications and services</p>
+                </div>
+                <a href="../index.html" target="_blank" class="btn btn-outline"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Public Site</a>
+            </div>
+
             <div id="backend-alert" class="hidden"></div>
-            
-            <div class="grid grid-3">
-                <div class="card" style="border-left: 4px solid var(--primary);">
-                    <h3 class="text-muted" style="font-size: 1rem; margin-bottom: 8px;">Total Applications</h3>
-                    <h2 id="stat-total" style="font-size: 2.5rem;">-</h2>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title"><i class="fa-solid fa-file-invoice"></i> Total Applications</div>
+                    <div id="stat-total" class="stat-value">-</div>
                 </div>
-                <div class="card" style="border-left: 4px solid var(--warning);">
-                    <h3 class="text-muted" style="font-size: 1rem; margin-bottom: 8px;">Pending Action</h3>
-                    <h2 id="stat-pending" style="font-size: 2.5rem;">-</h2>
+                <div class="stat-card warning">
+                    <div class="stat-title"><i class="fa-solid fa-clock"></i> Pending Action</div>
+                    <div id="stat-pending" class="stat-value" style="color: var(--warning);">-</div>
                 </div>
-                <div class="card" style="border-left: 4px solid var(--success);">
-                    <h3 class="text-muted" style="font-size: 1rem; margin-bottom: 8px;">Active Services</h3>
-                    <h2 id="stat-services" style="font-size: 2.5rem;">-</h2>
+                <div class="stat-card success">
+                    <div class="stat-title"><i class="fa-solid fa-circle-check"></i> Active Services</div>
+                    <div id="stat-services" class="stat-value" style="color: var(--success);">-</div>
+                </div>
+            </div>
+
+            <div class="card" style="background: #fff; padding: 32px; border-radius: 16px; border: 1px solid var(--admin-border);">
+                <h3 style="margin-bottom: 12px; font-size: 1.2rem;">Quick Operations</h3>
+                <p style="color: var(--admin-text-muted); margin-bottom: 24px;">Manage customer applications, update prices or edit FAQs easily.</p>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    <a href="applications.html" class="btn btn-primary"><i class="fa-solid fa-folder-open"></i> View All Applications</a>
+                    <a href="services.html" class="btn btn-outline"><i class="fa-solid fa-plus"></i> Add / Edit Services</a>
+                    <a href="faqs.html" class="btn btn-outline"><i class="fa-solid fa-circle-question"></i> Manage FAQs</a>
                 </div>
             </div>
         </main>
     </div>
+
     <script type="module" src="../js/admin/admin-dashboard.js"></script>
 </body>
 </html>
