@@ -1,7 +1,8 @@
 import { auth, db } from './firebase-config.js';
 import { 
     GoogleAuthProvider, 
-    signInWithPopup, 
+    signInWithRedirect,
+    getRedirectResult,
     RecaptchaVerifier, 
     signInWithPhoneNumber, 
     onAuthStateChanged, 
@@ -28,7 +29,8 @@ onAuthStateChanged(auth, (user) => {
 
 // --- UI HELPER ---
 function showAlert(msg, isError = true) {
-    const alertDiv = document.getElementById('auth-alert');
+    // Look for existing UI error elements
+    const alertDiv = document.getElementById('auth-alert') || document.getElementById('auth-error');
     if (!alertDiv) return;
     if (msg) {
         alertDiv.innerText = msg;
@@ -39,24 +41,50 @@ function showAlert(msg, isError = true) {
     }
 }
 
-// --- GOOGLE LOGIN ---
-const googleBtn = document.getElementById('btn-google');
-if (googleBtn) {
-    googleBtn.addEventListener('click', async () => {
-        const provider = new GoogleAuthProvider();
+// --- GOOGLE LOGIN (MOBILE-FRIENDLY REDIRECT FLOW) ---
+// 1. Process redirect result on page load
+getRedirectResult(auth).then((result) => {
+    if (result !== null) {
+        // Successful Google login via redirect
+        handlePostLoginRedirect();
+    }
+}).catch((error) => {
+    showAlert(`Google Auth Error: ${error.code} - ${error.message}`);
+    const googleBtn = document.getElementById('btn-google');
+    if (googleBtn) {
+        googleBtn.disabled = false;
+        googleBtn.innerHTML = 'Continue with Google';
+    }
+});
+
+// 2. Trigger Redirect flow
+window.loginWithGoogle = function() {
+    const provider = new GoogleAuthProvider();
+    const googleBtn = document.getElementById('btn-google');
+    
+    if (googleBtn) {
         googleBtn.disabled = true;
         googleBtn.innerHTML = 'Connecting...';
-        
-        try {
-            await signInWithPopup(auth, provider);
-            handlePostLoginRedirect();
-        } catch (error) {
-            if (error.code !== 'auth/popup-closed-by-user') {
-                showAlert("Google login failed. Please try again.");
-            }
-            googleBtn.disabled = false;
-            googleBtn.innerHTML = 'Continue with Google';
-        }
+    }
+    
+    // Preserve URL state in sessionStorage because the redirect will navigate away from the page
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectParam = urlParams.get('redirect');
+    const serviceParam = urlParams.get('service');
+    
+    if (redirectParam) sessionStorage.setItem('maa_redirect', redirectParam);
+    if (serviceParam) sessionStorage.setItem('maa_service', serviceParam);
+    
+    // Initiate Firebase Redirect Flow
+    signInWithRedirect(auth, provider);
+};
+
+// Bind to Google button if it exists
+const googleBtn = document.getElementById('btn-google');
+if (googleBtn) {
+    googleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.loginWithGoogle();
     });
 }
 
@@ -98,7 +126,7 @@ if (sendOtpBtn) {
             document.getElementById('otp-sent-msg').innerText = `OTP sent to ${normalizedPhone}`;
             
         } catch (error) {
-            showAlert("Failed to send OTP. Check network and try again.");
+            showAlert(`OTP Error: ${error.code} - ${error.message}`);
             sendOtpBtn.disabled = false;
             sendOtpBtn.innerHTML = 'Send OTP';
             if (recaptchaVerifier) {
@@ -126,7 +154,7 @@ if (verifyOtpBtn) {
             await confirmationResult.confirm(otpInput);
             handlePostLoginRedirect();
         } catch (error) {
-            showAlert("Invalid OTP. Please check and try again.");
+            showAlert(`Verification Error: ${error.code} - ${error.message}`);
             verifyOtpBtn.disabled = false;
             verifyOtpBtn.innerHTML = 'Verify OTP';
         }
@@ -151,8 +179,14 @@ if (changeNumBtn) {
 // --- REDIRECT SECURITY ---
 function handlePostLoginRedirect() {
     const urlParams = new URLSearchParams(window.location.search);
-    const redirectParam = urlParams.get('redirect');
-    const serviceParam = urlParams.get('service');
+    
+    // Recover redirect targets either from current URL or from SessionStorage (if recovering from Google Redirect)
+    let redirectParam = urlParams.get('redirect') || sessionStorage.getItem('maa_redirect');
+    let serviceParam = urlParams.get('service') || sessionStorage.getItem('maa_service');
+
+    // Clean up SessionStorage
+    sessionStorage.removeItem('maa_redirect');
+    sessionStorage.removeItem('maa_service');
 
     const allowedRoutes = ['apply.html', 'index.html', 'profile.html', 'track-application.html', 'service-details.html'];
     let safeRedirect = 'index.html';
