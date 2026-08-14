@@ -3,34 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | Maa Enterprises</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Admin Login - MAA ENTERPRISES</title>
 </head>
-<body style="background: #0f172a; color: white;">
-    <main class="container section" style="max-width: 400px; margin-top: 10vh;">
-        <div class="card" style="background: #1e293b; border: 1px solid #334155;">
-            <h2 class="text-center" style="color: #3b82f6; letter-spacing:1px;">ADMIN PORTAL</h2>
-            <p class="text-center" style="color: #94a3b8; margin-bottom: 32px;">Maa Enterprises Cyber Cafe</p>
-            
-            <div id="auth-error" class="hidden"></div>
-            
-            <form id="admin-login-form">
-                <div class="form-group">
-                    <label class="form-label" style="color:#e2e8f0;">Admin ID</label>
-                    <input type="text" id="admin-id" class="form-control" required style="background:#0f172a; color:white; border:1px solid #475569;" placeholder="Enter ID">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" style="color:#e2e8f0;">Password</label>
-                    <input type="password" id="admin-pass" class="form-control" required style="background:#0f172a; color:white; border:1px solid #475569;" placeholder="Enter password">
-                </div>
-                <button type="submit" id="login-btn" class="btn btn-primary" style="width:100%; margin-top:16px;">Secure Login</button>
-            </form>
-            
-            <div style="margin-top: 24px; text-align:center;">
-                <a href="../index.html" style="color: #64748b; font-size:0.875rem;">&larr; Return to Public Website</a>
-            </div>
-        </div>
-    </main>
-    <script type="module" src="../js/admin/admin-auth.js"></script>
+<body>
+    <div style="max-width: 400px; margin: 50px auto; text-align: center;">
+        <h2>Admin Portal Login</h2>
+        
+        <div id="admin-error" style="color: red; display: none; margin-bottom: 10px;"></div>
+
+        <input type="text" id="admin-id" placeholder="Admin ID" style="width: 100%; padding: 10px; margin-bottom: 10px;">
+        <input type="password" id="admin-pwd" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 20px;">
+        
+        <button id="btn-admin-login" style="width: 100%; padding: 10px; background: #333; color: white;">
+            Login to Dashboard
+        </button>
+    </div>
+
+    <script type="module" src="../admin-auth.js"></script>
 </body>
 </html>
