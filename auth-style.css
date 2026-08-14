@@ -1,4 +1,4 @@
-/* MAA ENTERPRISES - Professional Cyber Cafe UI */
+/* auth-style.css */
 :root {
     --brand-primary: #0f3460;
     --brand-accent: #e94560;
@@ -86,24 +86,6 @@
     border-color: #ccc;
 }
 
-.auth-divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: var(--auth-subtext);
-    font-size: 13px;
-    margin: 25px 0;
-}
-
-.auth-divider::before, .auth-divider::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid var(--auth-border);
-}
-
-.auth-divider::before { margin-right: 15px; }
-.auth-divider::after { margin-left: 15px; }
-
 .auth-input-group {
     margin-bottom: 16px;
     text-align: left;
@@ -161,6 +143,7 @@
     border-radius: 6px;
     display: none;
 }
+
 .auth-alert.error { background: #fdeaea; color: var(--auth-error); border-left: 4px solid var(--auth-error); }
 .auth-alert.success { background: #eafaf1; color: var(--auth-success); border-left: 4px solid var(--auth-success); }
 
@@ -171,6 +154,7 @@
     justify-content: space-between;
     align-items: center;
 }
+
 .auth-footer a { color: var(--brand-primary); text-decoration: none; font-weight: 600; }
 .auth-footer a:hover { text-decoration: underline; }
 .security-badge { font-size: 11px; color: var(--auth-subtext); display: flex; align-items: center; gap: 4px; }
