@@ -1,101 +1,120 @@
-import { auth } from './firebase-config.js';
+// js/auth.js
+import { auth, db } from './firebase-config.js';
 import { 
     GoogleAuthProvider, 
-    signInWithRedirect, 
-    getRedirectResult,
+    signInWithPopup, 
     onAuthStateChanged, 
     signOut 
-} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// --- 1. PROCESS GOOGLE REDIRECT RESULT ---
-getRedirectResult(auth).then((result) => {
-    if (result !== null) {
+// --- 1. GOOGLE POPUP LOGIN ---
+export async function loginWithGoogle() {
+    const alertBox = document.getElementById('auth-alert');
+    const googleBtn = document.getElementById('btn-google');
+
+    if (alertBox) {
+        alertBox.style.display = 'none';
+        alertBox.textContent = '';
+    }
+    if (googleBtn) {
+        googleBtn.disabled = true;
+    }
+
+    try {
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        // Sync user with Firestore 'users' collection
+        try {
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+            if (!userSnap.exists()) {
+                await setDoc(userRef, {
+                    name: user.displayName || "Customer",
+                    email: user.email,
+                    photoURL: user.photoURL || "",
+                    createdAt: new Date()
+                }, { merge: true });
+            }
+        } catch (dbErr) {
+            console.warn("Firestore user sync warning:", dbErr.message);
+        }
+
         handlePostLoginRedirect();
+    } catch (error) {
+        console.error("Google Auth Error:", error);
+        if (alertBox) {
+            alertBox.textContent = "Login Failed: " + (error.message || "Unknown error");
+            alertBox.style.display = 'block';
+        }
+    } finally {
+        if (googleBtn) {
+            googleBtn.disabled = false;
+        }
     }
-}).catch((error) => {
-    console.error("Google Auth Error:", error.message);
-    const errorDiv = document.getElementById('auth-error');
-    if (errorDiv) {
-        errorDiv.innerText = "Login Failed: " + error.message;
-        errorDiv.classList.remove('hidden');
-        errorDiv.style.display = 'block';
-    }
-});
+}
 
-// --- 2. TRIGGER GOOGLE SIGN-IN ---
-window.loginWithGoogle = function() {
-    const provider = new GoogleAuthProvider();
-    
-    // Save URL parameters safely before redirect
-    const urlParams = new URLSearchParams(window.location.search);
-    const redirectParam = urlParams.get('redirect');
-    const serviceParam = urlParams.get('service');
-    
-    if (redirectParam) sessionStorage.setItem('maa_redirect', redirectParam);
-    if (serviceParam) sessionStorage.setItem('maa_service', serviceParam);
-    
-    // Start Redirect Authentication
-    signInWithRedirect(auth, provider);
-};
+window.loginWithGoogle = loginWithGoogle;
 
-// Bind to Login Button securely
+// Bind Button Click
 document.addEventListener('DOMContentLoaded', () => {
-    const googleBtn = document.getElementById('btn-google-login') || document.querySelector('.btn-google');
-    if (googleBtn && !googleBtn.onclick) {
+    const googleBtn = document.getElementById('btn-google') || document.querySelector('.btn-google');
+    if (googleBtn) {
         googleBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            window.loginWithGoogle();
+            loginWithGoogle();
         });
     }
 });
 
-// --- 3. HANDLE REDIRECT AFTER SUCCESSFUL LOGIN ---
+// --- 2. POST LOGIN REDIRECT ---
 function handlePostLoginRedirect() {
-    let redirectParam = sessionStorage.getItem('maa_redirect');
-    let serviceParam = sessionStorage.getItem('maa_service');
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectParam = urlParams.get('redirect');
+    const serviceParam = urlParams.get('service') || urlParams.get('id');
 
-    // Clean up temporary session storage
-    sessionStorage.removeItem('maa_redirect');
-    sessionStorage.removeItem('maa_service');
+    const allowedRoutes = ['apply.html', 'index.html', 'profile.html', 'track-application.html', 'service-details.html', 'applications.html'];
+    let safeRedirect = 'index.html';
 
-    // Whitelist to prevent open redirect vulnerabilities
-    const allowedRoutes = ['apply.html', 'index.html', 'profile.html', 'track-application.html', 'service-details.html'];
-    let safeRedirect = 'index.html'; 
-
-    if (redirectParam && allowedRoutes.includes(redirectParam)) {
+    if (redirectParam && allowedRoutes.some(r => redirectParam.includes(r))) {
         safeRedirect = redirectParam;
     }
 
-    if (serviceParam) {
-        window.location.href = `${safeRedirect}?service=${encodeURIComponent(serviceParam)}`;
+    if (serviceParam && !safeRedirect.includes('?')) {
+        window.location.href = `${safeRedirect}?id=${encodeURIComponent(serviceParam)}`;
     } else {
         window.location.href = safeRedirect;
     }
 }
 
-// --- 4. GLOBAL AUTH STATE LISTENER (For Navbar/UI) ---
+// --- 3. GLOBAL NAV AUTH STATE LISTENER ---
 onAuthStateChanged(auth, (user) => {
-    const loginBtn = document.getElementById('nav-login-btn');
-    const profileBtn = document.getElementById('nav-profile-btn');
-    const logoutBtn = document.getElementById('nav-logout-btn');
+    const loginNav = document.getElementById('nav-login');
+    const profileNav = document.getElementById('nav-profile');
+    const myAppsNav = document.getElementById('nav-my-apps');
 
     if (user) {
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (profileBtn) profileBtn.style.display = 'inline-block';
-        if (logoutBtn) logoutBtn.style.display = 'inline-block';
+        if (loginNav) loginNav.classList.add('hidden');
+        if (profileNav) profileNav.classList.remove('hidden');
+        if (myAppsNav) myAppsNav.classList.remove('hidden');
     } else {
-        if (loginBtn) loginBtn.style.display = 'inline-block';
-        if (profileBtn) profileBtn.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = 'none';
+        if (loginNav) loginNav.classList.remove('hidden');
+        if (profileNav) profileNav.classList.add('hidden');
+        if (myAppsNav) myAppsNav.classList.add('hidden');
     }
 });
 
-// --- 5. LOGOUT FUNCTION ---
-window.customerLogout = async function() {
+// --- 4. CUSTOMER LOGOUT ---
+export async function customerLogout() {
     try {
         await signOut(auth);
         window.location.href = 'index.html';
     } catch (error) {
         console.error("Logout failed:", error);
     }
-};
+}
+window.customerLogout = customerLogout;
