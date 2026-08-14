@@ -1,7 +1,6 @@
 import { auth } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
-// Ensure this only runs on apply.html
 onAuthStateChanged(auth, (user) => {
     if (!user) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -14,7 +13,7 @@ onAuthStateChanged(auth, (user) => {
         
         window.location.href = redirectUrl;
     } else {
-        console.log("Customer authenticated, application flow authorized.");
-        // Phase 2 apply rendering code goes here
+        // Customer is authenticated, proceed with application logic
+        console.log("Customer authenticated, loading application data...");
     }
 });
