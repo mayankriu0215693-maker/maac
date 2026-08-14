@@ -1,10 +1,11 @@
+// js/profile.js
 import { auth, db } from "./firebase-config.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 function safeText(id, text) {
     const el = document.getElementById(id);
-    if(el) el.textContent = text || "Not available";
+    if (el) el.textContent = text || "Not available";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -24,29 +25,44 @@ document.addEventListener("DOMContentLoaded", () => {
                 const docRef = doc(db, "users", user.uid);
                 const docSnap = await getDoc(docRef);
                 
-                loading.classList.add("hidden");
-                card.classList.remove("hidden");
-
+                if (loading) loading.classList.add("hidden");
+                if (card) card.classList.remove("hidden");
+                
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    safeText("prof-name", data.name || user.displayName);
+                    safeText("prof-name", data.name || user.displayName || "Customer");
                     safeText("prof-email", data.email || user.email);
                     if (data.createdAt && typeof data.createdAt.toDate === 'function') {
                         safeText("prof-date", data.createdAt.toDate().toLocaleDateString());
+                    } else if (user.metadata?.creationTime) {
+                        safeText("prof-date", new Date(user.metadata.creationTime).toLocaleDateString());
                     }
                 } else {
-                    safeText("prof-name", user.displayName);
+                    safeText("prof-name", user.displayName || "Customer");
                     safeText("prof-email", user.email);
-                    errorDiv.textContent = "Complete profile details not found, but you are securely logged in.";
-                    errorDiv.className = "alert alert-warning";
+                    if (user.metadata?.creationTime) {
+                        safeText("prof-date", new Date(user.metadata.creationTime).toLocaleDateString());
+                    }
                 }
             } catch (error) {
-                loading.classList.add("hidden");
-                errorDiv.textContent = "Error loading secure profile data: " + error.message;
-                errorDiv.className = "alert alert-error";
+                if (loading) loading.classList.add("hidden");
+                if (errorDiv) {
+                    errorDiv.textContent = "Error loading profile: " + error.message;
+                    errorDiv.className = "alert alert-error";
+                    errorDiv.classList.remove("hidden");
+                }
             }
         } else {
             window.location.href = "login.html?redirect=profile.html";
         }
+    });
+
+    const logoutBtns = document.querySelectorAll('.logout-btn');
+    logoutBtns.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = 'index.html';
+        });
     });
 });
