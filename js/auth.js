@@ -1,87 +1,144 @@
-/**
- * MAA ENTERPRISES - Premium Authentication Flow
- * Handles Google Login, UI states, Error mapping, and Redirect preservation.
- */
+import { auth, db } from "./firebase-config.js";
+import { 
+    GoogleAuthProvider, 
+    signInWithPopup, 
+    RecaptchaVerifier, 
+    signInWithPhoneNumber,
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const loginBtn = document.getElementById('google-login-btn');
-    if (!loginBtn) return;
+// DOM Elements
+const errorMsg = document.getElementById("error-message");
+const btnGoogle = document.getElementById("btn-google-login");
+const otpWrapper = document.getElementById("otp-section-wrapper");
+const phoneInputState = document.getElementById("phone-input-state");
+const otpVerifyState = document.getElementById("otp-verify-state");
+const phoneInput = document.getElementById("phone-number");
+const otpInput = document.getElementById("otp-code");
+const btnSendOtp = document.getElementById("btn-send-otp");
+const btnVerifyOtp = document.getElementById("btn-verify-otp");
+const navAuthState = document.getElementById("nav-auth-state");
 
-    // Determine redirect URL from query params
-    const urlParams = new URLSearchParams(window.location.search);
-    const encodedRedirect = urlParams.get('redirect');
-    const redirectUrl = encodedRedirect ? decodeURIComponent(encodedRedirect) : 'index.html';
+let confirmationResult = null;
 
-    loginBtn.addEventListener('click', () => {
-        // Prevent multiple clicks
-        if (loginBtn.disabled) return;
-        
-        setLoadingState(true);
-        hideError();
+function showError(msg) {
+    if(errorMsg) {
+        errorMsg.innerText = msg;
+        errorMsg.style.display = "block";
+    }
+}
 
-        if (typeof firebase !== 'undefined' && firebase.auth) {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            
-            firebase.auth().signInWithPopup(provider)
-                .then((result) => {
-                    // Success! Redirect to the preserved destination.
-                    window.location.href = redirectUrl;
-                })
-                .catch((error) => {
-                    setLoadingState(false);
-                    handleAuthError(error);
-                });
-        } else {
-            // Fallback for dev environments without Firebase
-            setTimeout(() => {
-                setLoadingState(false);
-                window.location.href = redirectUrl;
-            }, 1000);
+// 1. Fetch Admin Settings (Toggle Mobile OTP)
+async function fetchAuthSettings() {
+    try {
+        const docRef = doc(db, "settings", "auth");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data.mobileOtpEnabled && otpWrapper) {
+                otpWrapper.style.display = "block";
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching auth settings.");
+    }
+}
+
+// 2. Handle Google Login
+if (btnGoogle) {
+    btnGoogle.addEventListener("click", async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+            await signInWithPopup(auth, provider);
+            handleSuccessfulLogin();
+        } catch (error) {
+            showError("Google sign-in failed. Please try again.");
         }
     });
+}
+
+// 3. Handle Phone Login (Send OTP)
+if (btnSendOtp) {
+    btnSendOtp.addEventListener("click", async () => {
+        const number = phoneInput.value.trim();
+        const indianPhoneRegex = /^[6-9]\d{9}$/;
+        
+        if (!indianPhoneRegex.test(number)) {
+            showError("Please enter a valid 10-digit Indian mobile number.");
+            return;
+        }
+
+        const fullNumber = `+91${number}`;
+
+        try {
+            if (!window.recaptchaVerifier) {
+                window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                    'size': 'invisible'
+                });
+            }
+            confirmationResult = await signInWithPhoneNumber(auth, fullNumber, window.recaptchaVerifier);
+            phoneInputState.style.display = "none";
+            otpVerifyState.style.display = "block";
+            showError(""); // Clear error
+        } catch (error) {
+            showError("Failed to send OTP. Please check your network and try again.");
+            if(window.recaptchaVerifier) window.recaptchaVerifier.clear();
+        }
+    });
+}
+
+// 4. Verify OTP
+if (btnVerifyOtp) {
+    btnVerifyOtp.addEventListener("click", async () => {
+        const code = otpInput.value.trim();
+        if (code.length !== 6) {
+            showError("Please enter a valid 6-digit OTP.");
+            return;
+        }
+        try {
+            await confirmationResult.confirm(code);
+            handleSuccessfulLogin();
+        } catch (error) {
+            showError("Invalid OTP. Please try again.");
+        }
+    });
+}
+
+// 5. Success Redirect Logic (Preserve Selected Service)
+function handleSuccessfulLogin() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirect') || 'index.html';
+    const service = urlParams.get('service');
+    
+    if (service) {
+        window.location.href = `${redirectUrl}?service=${service}`;
+    } else {
+        window.location.href = redirectUrl;
+    }
+}
+
+// 6. Handle Auth State for Navbar & Customer Logout
+onAuthStateChanged(auth, (user) => {
+    if (navAuthState) {
+        if (user) {
+            navAuthState.innerHTML = `
+                <a href="profile.html">Profile</a>
+                <button id="btn-logout" style="margin-left: 10px;">Logout</button>
+            `;
+            document.getElementById("btn-logout").addEventListener("click", () => {
+                signOut(auth).then(() => {
+                    window.location.href = "index.html";
+                });
+            });
+        } else {
+            navAuthState.innerHTML = `<a href="login.html">Login</a>`;
+        }
+    }
 });
 
-function setLoadingState(isLoading) {
-    const btn = document.getElementById('google-login-btn');
-    const btnText = document.getElementById('btn-text');
-    
-    if (isLoading) {
-        btn.disabled = true;
-        btn.classList.add('loading');
-        btnText.textContent = 'Signing you in...';
-    } else {
-        btn.disabled = false;
-        btn.classList.remove('loading');
-        btnText.textContent = 'Continue with Google';
-    }
-}
-
-function handleAuthError(error) {
-    let userFriendlyMsg = "Unable to sign you in right now. Please try again.";
-    
-    // Map Firebase technical errors to friendly UI messages
-    if (error.code === 'auth/popup-closed-by-user') {
-        userFriendlyMsg = "Google sign-in was cancelled. Please try again.";
-    } else if (error.code === 'auth/network-request-failed') {
-        userFriendlyMsg = "Network error. Please check your internet connection.";
-    } else if (error.code === 'auth/account-exists-with-different-credential') {
-        userFriendlyMsg = "An account already exists with the same email address.";
-    }
-    
-    // Log technical detail to console for admin debugging
-    console.warn("Auth Error:", error.code, error.message);
-    
-    showError(userFriendlyMsg);
-}
-
-function showError(message) {
-    const errorBox = document.getElementById('auth-error');
-    const errorMsg = document.getElementById('error-message');
-    errorMsg.textContent = message;
-    errorBox.classList.remove('hidden');
-}
-
-function hideError() {
-    const errorBox = document.getElementById('auth-error');
-    errorBox.classList.add('hidden');
+// Init
+if (window.location.pathname.includes("login.html")) {
+    fetchAuthSettings();
 }
