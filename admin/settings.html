@@ -4,31 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Settings - MAA ENTERPRISES</title>
-    <!-- Use root CSS file -->
-    <link rel="stylesheet" href="../style.css">
+    <!-- Basic structural CSS to fit seamlessly into admin dashboard -->
+    <style>
+        body { background: #f4f7f6; font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .admin-nav { display: flex; justify-content: space-between; align-items: center; background: #2c3e50; padding: 15px 30px; color: white; }
+        .admin-nav button { background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        .admin-container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        .settings-card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .settings-card h3 { margin-top: 0; color: #2c3e50; }
+        .settings-card p { color: #7f8c8d; font-size: 14px; margin-bottom: 25px; }
+        .status-box { padding: 15px; border-radius: 6px; font-weight: 600; font-size: 14px; margin-bottom: 20px; text-align: center; }
+        .btn-action { padding: 12px 24px; border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-on { background: #27ae60; }
+        .btn-off { background: #e74c3c; }
+        .btn-action:hover { opacity: 0.9; }
+    </style>
 </head>
 <body>
-    <div class="admin-wrapper">
-        <nav>
-            <button onclick="adminLogout()">Logout</button>
-        </nav>
-        
-        <div class="content">
-            <h2>Authentication Settings</h2>
+    
+    <nav class="admin-nav">
+        <h2 style="margin: 0;">MAA ENTERPRISES Admin</h2>
+        <button onclick="adminLogout()">Logout</button>
+    </nav>
+
+    <div class="admin-container">
+        <div class="settings-card">
+            <h3>Customer Authentication Settings</h3>
+            <p>Toggle the ability for customers to log in using their +91 Mobile Number. Google login will remain active regardless of this setting.</p>
             
-            <div class="setting-card">
-                <h3>Customer Mobile OTP Login</h3>
-                <p>Enable or disable the +91 mobile authentication option for customers.</p>
-                
-                <div id="settings-status" style="margin-bottom: 15px; font-weight: bold;">Loading status...</div>
-                
-                <button id="btn-enable-otp" onclick="toggleOTP(true)" style="display:none; background-color: #28a745; color: white;">Enable Mobile OTP</button>
-                <button id="btn-disable-otp" onclick="toggleOTP(false)" style="display:none; background-color: #dc3545; color: white;">Disable Mobile OTP</button>
+            <div id="settings-status" class="status-box" style="background: #f1f3f4; color: #5f6368;">
+                Loading current configuration...
+            </div>
+            
+            <div style="text-align: center;">
+                <button id="btn-enable-otp" class="btn-action btn-on" onclick="toggleOTP(true)" style="display:none;">Enable Mobile OTP</button>
+                <button id="btn-disable-otp" class="btn-action btn-off" onclick="toggleOTP(false)" style="display:none;">Disable Mobile OTP</button>
             </div>
         </div>
     </div>
 
-    <!-- Ensure Auth Protection is loaded before settings -->
+    <!-- Ensure Auth Protection is loaded before settings logic -->
     <script type="module" src="../admin-auth.js"></script>
     <script type="module" src="../admin-settings.js"></script>
 </body>
