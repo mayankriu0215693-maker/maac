@@ -10,33 +10,46 @@ async function loadCurrentSettings() {
         if (docSnap.exists()) {
             updateUI(docSnap.data().mobileOtpEnabled);
         } else {
-            // Initialize document safely if not found
+            // Default safe-state creation
             await setDoc(authSettingsRef, { mobileOtpEnabled: false }, { merge: true });
             updateUI(false);
         }
     } catch (error) {
-        statusText.innerText = "Error loading settings. Check your permissions.";
+        statusText.innerText = "Error loading settings. Check admin permissions.";
+        statusText.style.background = "#fdeaea";
+        statusText.style.color = "#e74c3c";
     }
 }
 
 window.toggleOTP = async function(state) {
     const statusText = document.getElementById('settings-status');
-    statusText.innerText = "Saving update...";
+    statusText.innerText = "Saving configuration...";
+    statusText.style.background = "#f1f3f4";
+    statusText.style.color = "#5f6368";
     
     try {
-        // Enforced securely by Firestore rules via the caller's Admin Token
+        // Safe write protected by Firestore Rules (Role == Admin)
         await setDoc(authSettingsRef, { mobileOtpEnabled: state }, { merge: true });
         updateUI(state);
     } catch (error) {
-        statusText.innerText = "Update failed. You may lack permission.";
+        statusText.innerText = "Update failed. You lack permission.";
+        statusText.style.background = "#fdeaea";
+        statusText.style.color = "#e74c3c";
     }
 }
 
 function updateUI(isEnabled) {
     const statusText = document.getElementById('settings-status');
-    statusText.innerText = isEnabled 
-        ? "Currently ON (Customers can use Phone OTP)" 
-        : "Currently OFF (Google Login ONLY)";
+    
+    if (isEnabled) {
+        statusText.innerText = "STATUS: ON (Customers can use Mobile OTP & Google)";
+        statusText.style.background = "#eafaf1";
+        statusText.style.color = "#27ae60";
+    } else {
+        statusText.innerText = "STATUS: OFF (Customers can ONLY use Google)";
+        statusText.style.background = "#f1f3f4";
+        statusText.style.color = "#5f6368";
+    }
     
     document.getElementById('btn-enable-otp').style.display = isEnabled ? 'none' : 'inline-block';
     document.getElementById('btn-disable-otp').style.display = isEnabled ? 'inline-block' : 'none';
