@@ -1,21 +1,23 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getAuth, browserLocalPersistence, setPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+import { getAuth, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-// Ensure you add your actual apiKey here from your Firebase Console
 const firebaseConfig = {
-  projectId: "maa-enterprises-ea055",
-  authDomain: "maa-enterprises-ea055.firebaseapp.com",
-  // apiKey: "AIzaSy...", 
+    apiKey: "AIzaSyCp_FNrSJld5R34WKbxXaWVghQdRLPoBKk",
+    authDomain: "maa-enterprises-ea055.firebaseapp.com",
+    projectId: "maa-enterprises-ea055",
+    storageBucket: "maa-enterprises-ea055.firebasestorage.app",
+    messagingSenderId: "861855732921",
+    appId: "1:861855732921:web:9cfcc89d32258786b87768"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Ensure session persists across redirects and reloads
+// Ensure user stays logged in across page reloads/tabs
 setPersistence(auth, browserLocalPersistence).catch((error) => {
-    console.error("Auth persistence error:", error.code, error.message);
+    console.error("Persistence error:", error.code, error.message);
 });
 
 export { app, auth, db };
