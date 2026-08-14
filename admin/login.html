@@ -5,37 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - MAA ENTERPRISES</title>
     <link rel="stylesheet" href="../auth-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="auth-body">
     <div class="auth-wrapper">
-        <div class="auth-card" style="border-top-color: #2c3e50;">
+        <div class="auth-card" style="border-top-color: #0f172a; box-shadow: 0 20px 40px rgba(15,23,42,0.15);">
             <div class="auth-brand-logo">
-                <h1 style="color: #2c3e50;">MAA ENTERPRISES</h1>
-                <p style="color: #7f8c8d;">Admin Portal</p>
+                <h1 style="color: #0f172a; font-weight: 800;">MAA ENTERPRISES</h1>
+                <p style="color: #64748b; font-weight: 700; letter-spacing: 1px;">Admin Portal</p>
             </div>
             
             <div id="admin-alert" class="auth-alert error" style="display: none;"></div>
             
             <form id="admin-login-form">
                 <div class="auth-input-group">
-                    <label>Admin ID / Email</label>
-                    <input type="text" id="admin-id" placeholder="Enter Admin ID or Email" required autocomplete="username">
+                    <label>Admin ID or Email</label>
+                    <input type="text" id="admin-id" placeholder="e.g. k0403488 or email" required autocomplete="username">
                 </div>
                 <div class="auth-input-group">
                     <label>Password</label>
-                    <input type="password" id="admin-pwd" placeholder="Enter password" required autocomplete="current-password">
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" id="admin-pwd" placeholder="Enter your password" required autocomplete="current-password" style="padding-right: 45px;">
+                        <button type="button" id="toggle-pwd-btn" style="position: absolute; right: 12px; background: none; border: none; cursor: pointer; color: #64748b; font-size: 1.1rem;" aria-label="Toggle password visibility">
+                            <i class="fa-solid fa-eye" id="eye-icon"></i>
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" id="btn-admin-login" class="btn-primary" style="background: #2c3e50; margin-top: 10px;">Secure Login</button>
+                <button type="submit" id="btn-admin-login" class="btn-primary" style="background: #0f172a; margin-top: 12px; padding: 14px; font-size: 1rem; border-radius: 8px;">
+                    Secure Admin Login
+                </button>
             </form>
 
-            <div class="auth-footer">
-                <a href="../index.html" style="color: #7f8c8d;">&larr; Return to Public Website</a>
-                <span class="security-badge">&#128274; Encrypted</span>
+            <div class="auth-footer" style="margin-top: 30px;">
+                <a href="../index.html" style="color: #64748b;">&larr; Return to Public Website</a>
+                <span class="security-badge">&#128274; 256-Bit Encrypted</span>
             </div>
         </div>
     </div>
 
-    <!-- Sahi script path -->
     <script type="module" src="../js/admin/admin-auth.js"></script>
 </body>
 </html>
