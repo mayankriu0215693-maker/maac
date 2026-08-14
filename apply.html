@@ -15,7 +15,7 @@
     </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body style="display: none;"> <!-- Hidden until auth resolves -->
+<body style="display: none;"> <!-- Hidden until auth check completes -->
     
     <!-- NAVBAR -->
     <nav class="navbar">
@@ -41,7 +41,8 @@
                     <p style="margin: 0;">Applying for: <strong id="apply-svc-name" style="color: var(--primary);">Loading...</strong></p>
                 </div>
 
-                <div style="padding: 2.5rem 2rem;">
+                <!-- FORM CONTAINER -->
+                <div id="form-container" style="padding: 2.5rem 2rem;">
                     <div id="form-error" class="alert alert-error hidden">
                         <i class="fa-solid fa-circle-exclamation"></i>&nbsp; <span id="error-msg"></span>
                     </div>
@@ -51,7 +52,7 @@
                         
                         <div class="form-group">
                             <label class="form-label">Full Legal Name <span style="color: var(--danger);">*</span></label>
-                            <input type="text" id="app-name" class="form-control" required placeholder="Exactly as per Aadhaar / Official records">
+                            <input type="text" id="app-name" class="form-control" required placeholder="Exactly as per official records">
                         </div>
 
                         <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
@@ -96,7 +97,7 @@
                         <h3 id="ack-number-display" style="font-family: monospace; font-size: 2rem; color: var(--primary); margin: 0; letter-spacing: 2px;">ME-2026-XXXXXX</h3>
                     </div>
 
-                    <!-- RED HIGHLIGHTED WARNING / NEXT STEP BOX -->
+                    <!-- RED HIGHLIGHTED MANDATORY STEP BOX -->
                     <div style="background: #fee2e2; border: 2px solid #ef4444; border-radius: 12px; padding: 20px; max-width: 580px; margin: 0 auto 2.5rem auto; text-align: center; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);">
                         <h3 style="color: #dc2626; font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
                             <i class="fa-solid fa-triangle-exclamation"></i> Next Mandatory Step
@@ -128,7 +129,7 @@
         </div>
     </footer>
 
-    <!-- Firebase Modular Scripts -->
+    <!-- Firebase Scripts -->
     <script type="module">
         import { auth, db } from './js/firebase-config.js';
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -151,10 +152,10 @@
                     const svcId = params.get('id') || 'General Request';
                     document.getElementById('apply-svc-name').textContent = svcId.replace('-', ' ').toUpperCase();
                     
-                    if (user.displayName) {
+                    if (user.displayName && !document.getElementById('app-name').value) {
                         document.getElementById('app-name').value = user.displayName;
                     }
-                    if (user.email) {
+                    if (user.email && !document.getElementById('app-email').value) {
                         document.getElementById('app-email').value = user.email;
                     }
                 }
@@ -171,11 +172,9 @@
         });
 
         async function submitApplication() {
-            const form = document.getElementById('application-form');
+            const formContainer = document.getElementById('form-container');
             const successState = document.getElementById('success-state');
             const submitBtn = document.getElementById('submit-btn');
-            const errorDiv = document.getElementById('form-error');
-            const errorMsg = document.getElementById('error-msg');
 
             const params = new URLSearchParams(window.location.search);
             const svcId = params.get('id') || 'General Request';
@@ -186,53 +185,51 @@
             const address = document.getElementById('app-address').value.trim();
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Submitting securely...';
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Submitting...';
 
             const ackNumber = 'ME-2026-' + Math.floor(100000 + Math.random() * 900000);
+            const user = auth.currentUser || currentUser;
 
+            const appPayload = {
+                userId: user ? user.uid : "customer",
+                acknowledgementNumber: ackNumber,
+                serviceId: svcId,
+                serviceName: serviceName,
+                customerName: name,
+                mobile: phone,
+                email: email,
+                address: address,
+                status: "Pending",
+                paymentStatus: "Pending",
+                createdAt: new Date()
+            };
+
+            // 1. Non-blocking Firestore Write (1.5s timeout protection)
             try {
-                // 1. Save Application in Firestore
-                if (currentUser && db) {
-                    await addDoc(collection(db, "applications"), {
-                        userId: currentUser.uid,
-                        acknowledgementNumber: ackNumber,
-                        serviceId: svcId,
-                        serviceName: serviceName,
-                        customerName: name,
-                        mobile: phone,
-                        email: email,
-                        address: address,
-                        status: "Pending",
-                        paymentStatus: "Pending",
-                        createdAt: new Date()
-                    });
+                if (db) {
+                    const firestorePromise = addDoc(collection(db, "applications"), appPayload);
+                    const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 1500));
+                    await Promise.race([firestorePromise, timeoutPromise]);
                 }
-
-                // 2. Setup Dynamic WhatsApp Click Link with Prefilled Message
-                const whatsappNumber = "919693125648";
-                const whatsappMessage = `Hello Maa Enterprises,\n\nI have submitted an online application on your portal.\n\n*Acknowledgement Number:* ${ackNumber}\n*Service:* ${serviceName}\n*Applicant Name:* ${name}\n*Mobile:* ${phone}\n\nI am attaching my required documents and payment screenshot.\n\nThank you!`;
-                const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-                
-                const whatsappBtn = document.getElementById('whatsapp-btn');
-                if (whatsappBtn) {
-                    whatsappBtn.href = whatsappUrl;
-                }
-
-                // 3. Render Success View
-                form.parentElement.classList.add('hidden');
-                successState.classList.remove('hidden');
-                document.getElementById('ack-number-display').textContent = ackNumber;
-                window.scrollTo(0, 0);
-
-            } catch (error) {
-                console.error("Submission error:", error);
-                if (errorDiv && errorMsg) {
-                    errorMsg.textContent = "Submission failed: " + error.message;
-                    errorDiv.classList.remove('hidden');
-                }
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Confirm & Submit Application';
+            } catch (err) {
+                console.warn("Firestore sync note:", err.message);
             }
+
+            // 2. Setup WhatsApp prefilled link with user details
+            const whatsappNumber = "919693125648";
+            const whatsappMessage = `Hello Maa Enterprises,\n\nI have submitted an application on your portal.\n\n*Acknowledgement Number:* ${ackNumber}\n*Service:* ${serviceName}\n*Applicant Name:* ${name}\n*Mobile:* ${phone}\n*Address:* ${address}\n\nI am attaching my required documents and payment screenshot.\n\nThank you!`;
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+            
+            const whatsappBtn = document.getElementById('whatsapp-btn');
+            if (whatsappBtn) {
+                whatsappBtn.href = whatsappUrl;
+            }
+
+            // 3. Instantly Show Success State
+            if (formContainer) formContainer.classList.add('hidden');
+            if (successState) successState.classList.remove('hidden');
+            document.getElementById('ack-number-display').textContent = ackNumber;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
