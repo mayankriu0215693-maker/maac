@@ -4,21 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - MAA ENTERPRISES</title>
+    <!-- Use root CSS file -->
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <div style="max-width: 400px; margin: 50px auto; text-align: center;">
-        <h2>Admin Portal Login</h2>
+    <div class="admin-login-container">
+        <h2>MAA ENTERPRISES</h2>
+        <h3>Admin Portal</h3>
         
         <div id="admin-error" style="color: red; display: none; margin-bottom: 10px;"></div>
 
-        <input type="text" id="admin-id" placeholder="Admin ID" style="width: 100%; padding: 10px; margin-bottom: 10px;">
-        <input type="password" id="admin-pwd" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 20px;">
+        <input type="text" id="admin-id" placeholder="Admin ID (e.g., K0403489)">
+        <input type="password" id="admin-pwd" placeholder="Password">
         
-        <button id="btn-admin-login" style="width: 100%; padding: 10px; background: #333; color: white;">
-            Login to Dashboard
-        </button>
+        <button onclick="adminLogin()">Access Dashboard</button>
     </div>
 
+    <!-- Ensure Auth logic from root is loaded -->
     <script type="module" src="../admin-auth.js"></script>
 </body>
 </html>
