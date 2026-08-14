@@ -7,33 +7,26 @@ import {
     signOut 
 } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
-// --- UI ERROR HELPER ---
-function showError(message) {
-    const errorDiv = document.getElementById('auth-error') || document.getElementById('auth-alert');
-    if (errorDiv) {
-        errorDiv.innerText = message;
-        errorDiv.style.display = message ? 'block' : 'none';
-        errorDiv.style.color = 'red';
-    }
-    console.error("Auth Error:", message);
-}
-
-// --- GOOGLE LOGIN WITH REDIRECT ---
-// 1. Process the result when Google redirects back to the website
+// --- 1. PROCESS GOOGLE REDIRECT RESULT ---
 getRedirectResult(auth).then((result) => {
     if (result !== null) {
-        // Successful login
         handlePostLoginRedirect();
     }
 }).catch((error) => {
-    showError(`Login Failed: ${error.message} (${error.code})`);
+    console.error("Google Auth Error:", error.message);
+    const errorDiv = document.getElementById('auth-error');
+    if (errorDiv) {
+        errorDiv.innerText = "Login Failed: " + error.message;
+        errorDiv.classList.remove('hidden');
+        errorDiv.style.display = 'block';
+    }
 });
 
-// 2. Trigger the redirect flow
+// --- 2. TRIGGER GOOGLE SIGN-IN ---
 window.loginWithGoogle = function() {
     const provider = new GoogleAuthProvider();
     
-    // Save state before leaving the page
+    // Save URL parameters safely before redirect
     const urlParams = new URLSearchParams(window.location.search);
     const redirectParam = urlParams.get('redirect');
     const serviceParam = urlParams.get('service');
@@ -41,39 +34,33 @@ window.loginWithGoogle = function() {
     if (redirectParam) sessionStorage.setItem('maa_redirect', redirectParam);
     if (serviceParam) sessionStorage.setItem('maa_service', serviceParam);
     
-    // Disable button to prevent double-clicks
-    const btn = document.getElementById('btn-google') || document.querySelector('.btn-google');
-    if (btn) btn.innerHTML = 'Connecting to Google...';
-
-    // Start redirect
+    // Start Redirect Authentication
     signInWithRedirect(auth, provider);
 };
 
-// Bind to button if onclick isn't inline
+// Bind to Login Button securely
 document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('btn-google') || document.querySelector('.btn-google');
-    if (btn && !btn.onclick) {
-        btn.addEventListener('click', (e) => {
+    const googleBtn = document.getElementById('btn-google-login') || document.querySelector('.btn-google');
+    if (googleBtn && !googleBtn.onclick) {
+        googleBtn.addEventListener('click', (e) => {
             e.preventDefault();
             window.loginWithGoogle();
         });
     }
 });
 
-// --- SAFE REDIRECT ROUTING ---
+// --- 3. HANDLE REDIRECT AFTER SUCCESSFUL LOGIN ---
 function handlePostLoginRedirect() {
-    // Retrieve state from URL or SessionStorage
-    const urlParams = new URLSearchParams(window.location.search);
-    let redirectParam = urlParams.get('redirect') || sessionStorage.getItem('maa_redirect');
-    let serviceParam = urlParams.get('service') || sessionStorage.getItem('maa_service');
+    let redirectParam = sessionStorage.getItem('maa_redirect');
+    let serviceParam = sessionStorage.getItem('maa_service');
 
-    // Clean up
+    // Clean up temporary session storage
     sessionStorage.removeItem('maa_redirect');
     sessionStorage.removeItem('maa_service');
 
-    // Whitelist allowed routes
+    // Whitelist to prevent open redirect vulnerabilities
     const allowedRoutes = ['apply.html', 'index.html', 'profile.html', 'track-application.html', 'service-details.html'];
-    let safeRedirect = 'index.html';
+    let safeRedirect = 'index.html'; 
 
     if (redirectParam && allowedRoutes.includes(redirectParam)) {
         safeRedirect = redirectParam;
@@ -86,9 +73,8 @@ function handlePostLoginRedirect() {
     }
 }
 
-// --- GENERAL AUTH STATE (Navbar/Logout) ---
+// --- 4. GLOBAL AUTH STATE LISTENER (For Navbar/UI) ---
 onAuthStateChanged(auth, (user) => {
-    // Only update UI if these elements exist on the current page
     const loginBtn = document.getElementById('nav-login-btn');
     const profileBtn = document.getElementById('nav-profile-btn');
     const logoutBtn = document.getElementById('nav-logout-btn');
@@ -104,6 +90,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+// --- 5. LOGOUT FUNCTION ---
 window.customerLogout = async function() {
     try {
         await signOut(auth);
