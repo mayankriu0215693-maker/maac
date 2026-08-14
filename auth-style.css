@@ -1,0 +1,176 @@
+/* MAA ENTERPRISES - Professional Cyber Cafe UI */
+:root {
+    --brand-primary: #0f3460;
+    --brand-accent: #e94560;
+    --auth-bg: #f5f7fa;
+    --auth-card: #ffffff;
+    --auth-text: #2c3e50;
+    --auth-subtext: #7f8c8d;
+    --auth-border: #e1e8ed;
+    --auth-error: #e74c3c;
+    --auth-success: #27ae60;
+}
+
+.auth-body {
+    background-color: var(--auth-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.auth-wrapper {
+    width: 100%;
+    max-width: 440px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.auth-card {
+    background: var(--auth-card);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 40px 32px;
+    text-align: center;
+    border-top: 5px solid var(--brand-primary);
+}
+
+.auth-brand-logo h1 {
+    color: var(--brand-primary);
+    font-size: 26px;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.auth-brand-logo p {
+    color: var(--brand-accent);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 4px 0 25px 0;
+}
+
+.auth-card h2 {
+    color: var(--auth-text);
+    font-size: 20px;
+    margin: 0 0 8px 0;
+}
+
+.auth-card > p {
+    color: var(--auth-subtext);
+    font-size: 14px;
+    margin: 0 0 25px 0;
+}
+
+.btn-google {
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--auth-border);
+    color: var(--auth-text);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+
+.btn-google:hover {
+    background: #fafafa;
+    border-color: #ccc;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--auth-subtext);
+    font-size: 13px;
+    margin: 25px 0;
+}
+
+.auth-divider::before, .auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--auth-border);
+}
+
+.auth-divider::before { margin-right: 15px; }
+.auth-divider::after { margin-left: 15px; }
+
+.auth-input-group {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.auth-input-group label {
+    display: block;
+    font-size: 13px;
+    color: var(--auth-text);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.auth-input-group input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--auth-border);
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.auth-input-group input:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+}
+
+.btn-primary {
+    width: 100%;
+    background: var(--brand-primary);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background: #0b2545;
+}
+
+.btn-primary:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.auth-alert {
+    font-size: 13px;
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 6px;
+    display: none;
+}
+.auth-alert.error { background: #fdeaea; color: var(--auth-error); border-left: 4px solid var(--auth-error); }
+.auth-alert.success { background: #eafaf1; color: var(--auth-success); border-left: 4px solid var(--auth-success); }
+
+.auth-footer {
+    margin-top: 25px;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.auth-footer a { color: var(--brand-primary); text-decoration: none; font-weight: 600; }
+.auth-footer a:hover { text-decoration: underline; }
+.security-badge { font-size: 11px; color: var(--auth-subtext); display: flex; align-items: center; gap: 4px; }
