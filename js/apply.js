@@ -1,26 +1,20 @@
-import { auth } from "./firebase-config.js";
+import { auth } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
-// Check if customer is authenticated before allowing application
+// Ensure this only runs on apply.html
 onAuthStateChanged(auth, (user) => {
     if (!user) {
-        // Not logged in. Redirect to login and preserve the intended service application
         const urlParams = new URLSearchParams(window.location.search);
-        const service = urlParams.get('service') || '';
+        let serviceId = urlParams.get('service');
         
-        window.location.href = `login.html?redirect=apply.html&service=${service}`;
-    } else {
-        // User is logged in. Allow them to see the application form.
-        document.body.style.display = "block";
-        
-        // Auto-fill selected service from URL if needed
-        const urlParams = new URLSearchParams(window.location.search);
-        const service = urlParams.get('service');
-        if(service) {
-            console.log("Applying for:", service);
-            // Example: document.getElementById("service-selection").value = service;
+        let redirectUrl = 'login.html?redirect=apply.html';
+        if (serviceId) {
+            redirectUrl += `&service=${encodeURIComponent(serviceId)}`;
         }
+        
+        window.location.href = redirectUrl;
+    } else {
+        console.log("Customer authenticated, application flow authorized.");
+        // Phase 2 apply rendering code goes here
     }
 });
-
-// Important: Ensure apply.html has inline style="display: none;" on the body tag to prevent UI flash before auth check.
