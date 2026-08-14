@@ -5,22 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - MAA ENTERPRISES</title>
     <!-- Use root CSS file -->
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../auth-style.css">
 </head>
-<body>
-    <div class="admin-login-container">
-        <h2>MAA ENTERPRISES</h2>
-        <h3>Admin Portal</h3>
-        
-        <div id="admin-error" style="color: red; display: none; margin-bottom: 10px;"></div>
+<body class="auth-body">
 
-        <input type="text" id="admin-id" placeholder="Admin ID (e.g., K0403489)">
-        <input type="password" id="admin-pwd" placeholder="Password">
-        
-        <button onclick="adminLogin()">Access Dashboard</button>
+    <div class="auth-wrapper">
+        <div class="auth-card" style="border-top-color: #2c3e50;">
+            
+            <div class="auth-brand-logo">
+                <h1 style="color: #2c3e50;">MAA ENTERPRISES</h1>
+                <p style="color: #7f8c8d;">Admin Portal</p>
+            </div>
+
+            <div id="admin-alert" class="auth-alert error"></div>
+
+            <div class="auth-input-group">
+                <label>Admin ID</label>
+                <input type="text" id="admin-id" placeholder="Enter Admin ID" autocomplete="off">
+            </div>
+
+            <div class="auth-input-group">
+                <label>Password</label>
+                <input type="password" id="admin-pwd" placeholder="Enter password">
+            </div>
+
+            <button id="btn-admin-login" class="btn-primary" style="background: #2c3e50; margin-top: 10px;">Secure Login</button>
+
+            <div class="auth-footer">
+                <a href="../index.html" style="color: #7f8c8d;">← Return to Public Website</a>
+                <span class="security-badge">🔒 Encrypted</span>
+            </div>
+        </div>
     </div>
 
-    <!-- Ensure Auth logic from root is loaded -->
     <script type="module" src="../admin-auth.js"></script>
 </body>
 </html>
