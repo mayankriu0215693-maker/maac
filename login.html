@@ -2,89 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Secure Login - MAA ENTERPRISES</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        document.documentElement.setAttribute('data-theme', savedTheme);
-    </script>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Login - MAA ENTERPRISES</title>
+    <!-- Add your existing CSS links here -->
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="index.html" class="logo">MAA ENTERPRISES</a>
-            <ul class="nav-links">
-                <li><a href="index.html" class="nav-link-standard">Home</a></li>
-                <li><a href="services.html" class="nav-link-standard">Services</a></li>
-                <li><a href="track-application.html" class="nav-link-standard">Track Application</a></li>
-                <li><a href="faq.html" class="nav-link-standard">FAQ</a></li>
-                <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme"><i class="fa-solid fa-moon"></i></button></li>
-            </ul>
+    <!-- NAVBAR PLACEHOLDER -->
+    <nav>
+        <div>MAA ENTERPRISES</div>
+        <div id="nav-auth-state">
+            <a href="login.html">Login</a>
         </div>
     </nav>
 
-    <!-- LOGIN WRAPPER -->
-    <section class="login-wrapper">
-        <div class="card login-card" style="animation: fadeUp 0.5s ease-out forwards;">
+    <div class="login-container" style="max-width: 400px; margin: 50px auto; text-align: center;">
+        <h2>Sign in to continue</h2>
+        
+        <div id="error-message" style="color: red; display: none; margin-bottom: 10px;"></div>
+
+        <!-- Google Login -->
+        <button id="btn-google-login" style="width: 100%; padding: 10px; margin-bottom: 20px;">
+            Continue with Google
+        </button>
+
+        <div id="otp-section-wrapper" style="display: none;">
+            <p>------------ OR ------------</p>
             
-            <div style="margin-bottom: 2rem;">
-                <h1 style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--primary);">Welcome Back</h1>
-                <p>Sign in to securely continue your application.</p>
-            </div>
-
-            <!-- Error Container -->
-            <div id="auth-error" class="alert alert-error hidden">
-                <i class="fa-solid fa-circle-exclamation"></i>&nbsp; <span id="error-message">Authentication failed.</span>
-            </div>
-
-            <!-- Login Action -->
-            <button id="google-login-btn" class="btn btn-google mb-4">
-                <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
-                <i class="fa-solid fa-circle-notch spinner-icon"></i>
-                <span id="btn-text">Continue with Google</span>
-            </button>
-
-            <!-- Divider -->
-            <div style="display: flex; align-items: center; justify-content: center; margin: 2rem 0; color: var(--text-light);">
-                <span style="height: 1px; background: var(--border-color); flex-grow: 1;"></span>
-                <span style="padding: 0 1rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">Secure • Simple • Trusted</span>
-                <span style="height: 1px; background: var(--border-color); flex-grow: 1;"></span>
-            </div>
-
-            <!-- Trust Badges -->
-            <div style="background: var(--bg-alt); padding: 1.25rem; border-radius: var(--radius-md); font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: 0.75rem; text-align: left;">
-                <i class="fa-solid fa-shield-halved" style="color: var(--success); font-size: 1.25rem; margin-top: 2px;"></i>
-                <div>
-                    <strong style="color: var(--text-main); display: block; margin-bottom: 0.25rem;">Your account is secured with Google Sign-In.</strong>
-                    We only use your Google account to securely identify you. We do not post or access private data.
+            <!-- Phone Input State -->
+            <div id="phone-input-state">
+                <div style="display: flex; margin-bottom: 10px;">
+                    <span style="padding: 10px; background: #eee;">+91</span>
+                    <input type="text" id="phone-number" placeholder="Mobile Number" style="flex: 1; padding: 10px;" maxlength="10">
                 </div>
+                <button id="btn-send-otp" style="width: 100%; padding: 10px;">Send OTP</button>
             </div>
 
+            <!-- OTP Verification State -->
+            <div id="otp-verify-state" style="display: none;">
+                <p>Enter the 6-digit OTP</p>
+                <input type="text" id="otp-code" placeholder="6-digit OTP" style="width: 100%; padding: 10px; margin-bottom: 10px;" maxlength="6">
+                <button id="btn-verify-otp" style="width: 100%; padding: 10px;">Verify OTP</button>
+            </div>
+            
+            <div id="recaptcha-container" style="margin-top: 10px;"></div>
         </div>
-    </section>
+    </div>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div class="container text-center">
-            <p class="text-muted" style="margin: 0;">&copy; 2026 Maa Enterprises. Need help? <a href="contact.html" style="color: var(--primary); font-weight: 600;">Contact Support</a></p>
-        </div>
-    </footer>
-
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth-compat.js"></script>
-    <script src="js/firebase-config.js"></script>
-    
-    <!-- App & Auth Logic -->
-    <script src="js/app.js"></script>
-    <script src="js/auth.js"></script>
+    <!-- Firebase App, Auth, Firestore Modules -->
+    <script type="module" src="auth.js"></script>
 </body>
 </html>
