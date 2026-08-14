@@ -8,7 +8,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// --- 1. GOOGLE POPUP LOGIN ---
+// --- 1. GOOGLE LOGIN ---
 export async function loginWithGoogle() {
     const alertBox = document.getElementById('auth-alert');
     const googleBtn = document.getElementById('btn-google');
@@ -28,7 +28,7 @@ export async function loginWithGoogle() {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
 
-        // Sync user with Firestore 'users' collection
+        // Sync with Firestore 'users' collection
         try {
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
@@ -41,7 +41,7 @@ export async function loginWithGoogle() {
                 }, { merge: true });
             }
         } catch (dbErr) {
-            console.warn("Firestore user sync warning:", dbErr.message);
+            console.warn("Firestore sync warning:", dbErr.message);
         }
 
         handlePostLoginRedirect();
@@ -60,18 +60,7 @@ export async function loginWithGoogle() {
 
 window.loginWithGoogle = loginWithGoogle;
 
-// Bind Button Click
-document.addEventListener('DOMContentLoaded', () => {
-    const googleBtn = document.getElementById('btn-google') || document.querySelector('.btn-google');
-    if (googleBtn) {
-        googleBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginWithGoogle();
-        });
-    }
-});
-
-// --- 2. POST LOGIN REDIRECT ---
+// --- 2. HANDLE REDIRECT ---
 function handlePostLoginRedirect() {
     const urlParams = new URLSearchParams(window.location.search);
     const redirectParam = urlParams.get('redirect');
@@ -91,20 +80,42 @@ function handlePostLoginRedirect() {
     }
 }
 
-// --- 3. GLOBAL NAV AUTH STATE LISTENER ---
+// --- 3. GLOBAL AUTH & NAVBAR STATE LISTENER ---
 onAuthStateChanged(auth, (user) => {
     const loginNav = document.getElementById('nav-login');
     const profileNav = document.getElementById('nav-profile');
     const myAppsNav = document.getElementById('nav-my-apps');
+    const logoutNav = document.getElementById('nav-logout');
+
+    const guestSection = document.getElementById('login-guest-section');
+    const activeSection = document.getElementById('login-active-section');
+    const userDisplayInfo = document.getElementById('user-display-info');
 
     if (user) {
+        // UI across website navbar
         if (loginNav) loginNav.classList.add('hidden');
         if (profileNav) profileNav.classList.remove('hidden');
         if (myAppsNav) myAppsNav.classList.remove('hidden');
+        if (logoutNav) logoutNav.classList.remove('hidden');
+
+        // Login page state when user is already logged in
+        if (guestSection && activeSection) {
+            guestSection.style.display = 'none';
+            activeSection.style.display = 'block';
+            if (userDisplayInfo) {
+                userDisplayInfo.textContent = `${user.displayName || 'Customer'} (${user.email})`;
+            }
+        }
     } else {
         if (loginNav) loginNav.classList.remove('hidden');
         if (profileNav) profileNav.classList.add('hidden');
         if (myAppsNav) myAppsNav.classList.add('hidden');
+        if (logoutNav) logoutNav.classList.add('hidden');
+
+        if (guestSection && activeSection) {
+            guestSection.style.display = 'block';
+            activeSection.style.display = 'none';
+        }
     }
 });
 
@@ -118,3 +129,32 @@ export async function customerLogout() {
     }
 }
 window.customerLogout = customerLogout;
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Google button listener
+    const googleBtn = document.getElementById('btn-google');
+    if (googleBtn) {
+        googleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginWithGoogle();
+        });
+    }
+
+    // Active session logout listener
+    const activeLogoutBtn = document.getElementById('btn-active-logout');
+    if (activeLogoutBtn) {
+        activeLogoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            customerLogout();
+        });
+    }
+
+    // Navbar logout buttons
+    const navLogoutBtns = document.querySelectorAll('#nav-logout-btn, .nav-logout-btn');
+    navLogoutBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            customerLogout();
+        });
+    });
+});
