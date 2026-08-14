@@ -15,9 +15,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Ensure user stays logged in across page reloads/tabs
+// Ensures authentication state survives page reloads
 setPersistence(auth, browserLocalPersistence).catch((error) => {
-    console.error("Persistence error:", error.code, error.message);
+    console.error("Firebase persistence error:", error.message);
 });
 
 export { app, auth, db };
